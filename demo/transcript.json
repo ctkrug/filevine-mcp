@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-07-14T13:52:51.720312+00:00",
+  "recorded": "2026-07-14T14:54:09.649775+00:00",
   "mode": "mock",
   "steps": [
     {
@@ -385,10 +385,10 @@
       "tool": "export_snapshot",
       "args": {},
       "result": {
-        "generated": "2026-07-14T13:52:51.627061+00:00",
+        "generated": "2026-07-14T14:54:09.560184+00:00",
         "mode": "mock",
         "schemaVersion": "1.0",
-        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T135251Z",
+        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T145409Z",
         "tables": [
           {
             "table": "projects",
@@ -465,7 +465,7 @@
         "auditEntries": 8,
         "lastThree": [
           {
-            "ts": "2026-07-14T13:52:51.621924+00:00",
+            "ts": "2026-07-14T14:54:09.553977+00:00",
             "tool": "create_task",
             "args": {
               "project_id": 10243,
@@ -478,7 +478,7 @@
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-14T13:52:51.624389+00:00",
+            "ts": "2026-07-14T14:54:09.556805+00:00",
             "tool": "add_note",
             "args": {
               "project_id": 10243,
@@ -488,7 +488,7 @@
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-14T13:52:51.626771+00:00",
+            "ts": "2026-07-14T14:54:09.559671+00:00",
             "tool": "export_snapshot",
             "args": {},
             "mode": "mock",

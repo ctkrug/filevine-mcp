@@ -10,8 +10,10 @@
 #   Gate 2  SMOKE          The full 31-check behavioural suite on the working tree.
 #   Gate 3  EVERGREEN      Time-travel: the demo must read identically on dates spanning
 #                          years. This is the guarantee that just silently broke once.
+#   Gate 4  LIVE FAILURE   Point live mode at a dead host / bad config and prove every
+#                          failure is a clean, actionable message — never a stack trace.
 #
-# Exit 0 only if all three pass. Run it before every send.
+# Exit 0 only if all four pass. Run it before every send.
 set -uo pipefail
 cd "$(dirname "$0")"
 ROOT="$(pwd)"
@@ -49,6 +51,14 @@ if .venv/bin/python test_evergreen.py >"$TMP/ever.log" 2>&1; then
   ok "demo reads identically on every simulated date"
 else
   no "evergreen drift detected:"; grep -iE 'FAIL|drift|->' "$TMP/ever.log" | head -8 | sed 's/^/      /'
+fi
+
+echo "── Gate 4: live mode fails gracefully ──"
+if .venv/bin/python test_live_failure.py >"$TMP/live.log" 2>&1; then
+  n=$(grep -c '  PASS' "$TMP/live.log")
+  ok "all $n live-failure checks pass (clean errors, no stack traces)"
+else
+  no "live-mode failure handling is not graceful:"; grep -iE 'FAIL|Traceback' "$TMP/live.log" | head -6 | sed 's/^/      /'
 fi
 
 echo

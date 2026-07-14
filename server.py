@@ -37,11 +37,13 @@ if sys.version_info < (3, 10):
     )
 
 import csv
+import functools
 import json
 import os
 import re
 import tempfile
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
@@ -90,6 +92,13 @@ def _today() -> date:
     the calendar — every date-derived number in the demo flows through this one function."""
     override = os.environ.get("FILEVINE_TODAY")
     return date.fromisoformat(override) if override else date.today()
+
+
+class FilevineError(RuntimeError):
+    """A live-mode failure carrying an operator-actionable message. Every tool turns this
+    into a clean JSON `error` instead of a stack trace, so a reviewer who points the server
+    at a real org and hits an auth/shape mismatch is told exactly what to fix — mock mode
+    never raises it (no network, no credentials)."""
 
 
 class MockBackend:
@@ -191,18 +200,74 @@ class LiveBackend:
         "ca": ("https://identity.filevine.ca", "https://api.filevineapp.ca"),
     }
     SCOPES = "fv.api.gateway.access tenant filevine.v2.api.* email openid fv.auth.tenant.read"
+    TIMEOUT = 30                      # seconds per request
+    RETRY_STATUS = {429, 502, 503, 504}   # server-side transient — worth one retry
+    _HINTS = {
+        400: "Bad request — check client_id/secret/PAT and the scope string.",
+        401: "Unauthorized — the PAT or client credentials are invalid or expired.",
+        403: "Forbidden — the credentials lack scope/permission for this resource.",
+        404: "Not found — the API path or org id may be wrong for this region.",
+        429: "Rate-limited by Filevine — retried once already; back off and try later.",
+    }
 
     def __init__(self) -> None:
-        identity, api = self.HOSTS[os.environ.get("FILEVINE_REGION", "us")]
-        self._token_url = f"{identity}/connect/token"
+        region = os.environ.get("FILEVINE_REGION", "us").lower()
+        if region not in self.HOSTS:
+            raise FilevineError(
+                f"FILEVINE_REGION={region!r} is not supported — use 'us' or 'ca' "
+                "(or set FILEVINE_TOKEN_URL / FILEVINE_BASE_URL for a custom host)."
+            )
+        identity, api = self.HOSTS[region]
+        # URLs are overridable so on-prem/staging works and failure paths are testable offline.
+        self._token_url = os.environ.get("FILEVINE_TOKEN_URL", f"{identity}/connect/token")
         self._base = os.environ.get("FILEVINE_BASE_URL", f"{api}/fv-app/v2")
         self._client_id = os.environ["FILEVINE_CLIENT_ID"]
         self._client_secret = os.environ["FILEVINE_CLIENT_SECRET"]
         self._pat = os.environ["FILEVINE_PAT"]
+        self._region = region
         self._token: str | None = None
         self._token_exp = 0.0
         self._org_id = os.environ.get("FILEVINE_ORG_ID", "")
         self._user_id = ""
+
+    # -- one HTTP path, every failure translated to a FilevineError ---------
+    def _http_json(self, req: urllib.request.Request, *, what: str) -> dict:
+        """Perform a request and return parsed JSON, or raise FilevineError with an
+        actionable message. Retries once on transient server-side statuses; fails fast
+        (with guidance) on auth, network, and shape errors — never leaks a stack trace."""
+        for attempt in (1, 2):
+            try:
+                with urllib.request.urlopen(req, timeout=self.TIMEOUT) as r:
+                    raw = r.read()
+                break
+            except urllib.error.HTTPError as e:
+                if e.code in self.RETRY_STATUS and attempt == 1:
+                    time.sleep(0.5)
+                    continue
+                body = ""
+                try:
+                    body = e.read().decode("utf-8", "replace")[:300]
+                except Exception:
+                    pass
+                hint = self._HINTS.get(e.code, "Verify credentials, region, and that the documented flow still matches.")
+                raise FilevineError(
+                    f"Filevine {what} failed: HTTP {e.code} {e.reason}. {hint}"
+                    + (f" Response: {body}" if body.strip() else "")
+                    + " (Unset FILEVINE_* to fall back to mock mode.)"
+                ) from None
+            except (urllib.error.URLError, TimeoutError, OSError) as e:
+                reason = getattr(e, "reason", e)
+                raise FilevineError(
+                    f"Filevine {what} failed: could not reach the API ({reason}). "
+                    "Check network and FILEVINE_REGION, or unset FILEVINE_* to use mock mode."
+                ) from None
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            raise FilevineError(
+                f"Filevine {what} returned a non-JSON response "
+                f"(HTTP OK but unparseable): {raw[:150]!r}"
+            ) from None
 
     # -- auth ---------------------------------------------------------------
     def _bearer(self) -> str:
@@ -220,9 +285,14 @@ class LiveBackend:
                 self._token_url, data=body,
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
-            with urllib.request.urlopen(req, timeout=15) as r:
-                tok = json.loads(r.read())
-            self._token = tok["access_token"]
+            tok = self._http_json(req, what="token exchange")
+            token = tok.get("access_token")
+            if not token:
+                raise FilevineError(
+                    "Token exchange returned no access_token "
+                    f"(keys: {sorted(tok)[:8]}). Check grant_type and scopes."
+                )
+            self._token = token
             self._token_exp = time.time() + int(tok.get("expires_in", 3600))
             self._bootstrap_identity()
         return self._token
@@ -233,14 +303,20 @@ class LiveBackend:
             f"{self._base}/utils/GetUserOrgsWithToken", data=b"{}", method="POST",
             headers={"Authorization": f"Bearer {self._token}", "Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            data = json.loads(r.read())
+        data = self._http_json(req, what="identity bootstrap (GetUserOrgsWithToken)")
         self._user_id = str(data.get("userId") or data.get("user", {}).get("userId") or self._user_id)
         if not self._org_id:
             orgs = data.get("orgs") or data.get("organizations") or []
             if orgs:
                 first = orgs[0]
                 self._org_id = str(first.get("orgId") or first.get("id") or "")
+        if not self._user_id or not self._org_id:
+            raise FilevineError(
+                "Authenticated, but could not resolve "
+                + " and ".join(x for x, ok in (("userId", self._user_id), ("orgId", self._org_id)) if not ok)
+                + " from GetUserOrgsWithToken (response shape differs from the documented one). "
+                "Set FILEVINE_ORG_ID explicitly, or unset FILEVINE_* to use mock mode."
+            )
 
     def _headers(self, extra: dict | None = None) -> dict:
         h = {
@@ -250,11 +326,23 @@ class LiveBackend:
         }
         return {**h, **(extra or {})}
 
+    @staticmethod
+    def _items(payload) -> list:
+        """Filevine paginated list endpoints wrap rows in an envelope whose key is
+        unverified from the outside — accept a bare list or the usual key names, and
+        never crash if the shape is unexpected (return nothing and let tools report)."""
+        if isinstance(payload, list):
+            return payload
+        if isinstance(payload, dict):
+            for key in ("items", "data", "results", "value"):
+                if isinstance(payload.get(key), list):
+                    return payload[key]
+        return []
+
     def _get(self, path: str, params: dict | None = None) -> dict:
         qs = f"?{urllib.parse.urlencode(params)}" if params else ""
         req = urllib.request.Request(f"{self._base}{path}{qs}", headers=self._headers())
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read())
+        return self._http_json(req, what=f"GET {path}")
 
     def _post(self, path: str, payload: dict) -> dict:
         req = urllib.request.Request(
@@ -262,8 +350,7 @@ class LiveBackend:
             data=json.dumps(payload).encode(),
             headers=self._headers({"Content-Type": "application/json"}),
         )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read())
+        return self._http_json(req, what=f"POST {path}")
 
     # -- resources (paths per Filevine v2 docs; see class docstring) --------
     @staticmethod
@@ -291,17 +378,16 @@ class LiveBackend:
         }
 
     def projects(self) -> list[dict]:
-        items = self._get("/projects", {"limit": 100}).get("items", [])
-        return [self._normalize_project(p) for p in items]
+        return [self._normalize_project(p) for p in self._items(self._get("/projects", {"limit": 100}))]
 
     def documents(self) -> list[dict]:
-        return self._get("/documents", {"limit": 100}).get("items", [])
+        return self._items(self._get("/documents", {"limit": 100}))
 
     def tasks(self) -> list[dict]:
-        return self._get("/tasks", {"limit": 100}).get("items", [])
+        return self._items(self._get("/tasks", {"limit": 100}))
 
     def notes(self) -> list[dict]:
-        return self._get("/notes", {"limit": 100}).get("items", [])
+        return self._items(self._get("/notes", {"limit": 100}))
 
     def create_task(self, project_id: int, title: str, assignee: str, due: str, priority: str) -> dict:
         return self._post("/tasks", {
@@ -313,11 +399,38 @@ class LiveBackend:
         return self._post("/notes", {"projectId": project_id, "text": text})
 
 
-BACKEND = (
-    LiveBackend()
-    if all(os.environ.get(k) for k in ("FILEVINE_CLIENT_ID", "FILEVINE_CLIENT_SECRET", "FILEVINE_PAT"))
-    else MockBackend()
-)
+LIVE_KEYS = ("FILEVINE_CLIENT_ID", "FILEVINE_CLIENT_SECRET", "FILEVINE_PAT")
+
+
+def _select_backend():
+    """Live if all three credentials are present, else mock. A partial set is almost
+    always a misconfiguration — warn loudly rather than silently serving fixtures when
+    the operator clearly meant to go live. Config errors exit with a clear message,
+    never a stack trace."""
+    present = [k for k in LIVE_KEYS if os.environ.get(k)]
+    if len(present) == len(LIVE_KEYS):
+        try:
+            backend = LiveBackend()
+        except FilevineError as e:
+            sys.exit(f"filevine-mcp: live-mode configuration error — {e}")
+        print(f"filevine-mcp: LIVE mode (region={backend._region}). "
+              "Auth is lazy — the first tool call performs the token exchange.", file=sys.stderr)
+        return backend
+    if present:
+        missing = [k for k in LIVE_KEYS if k not in present]
+        print(
+            "filevine-mcp: partial live credentials detected "
+            f"({', '.join(present)} set; missing {', '.join(missing)}). "
+            "Live mode needs all three — falling back to MOCK mode.",
+            file=sys.stderr,
+        )
+    else:
+        print("filevine-mcp: MOCK mode (6 bundled fixture matters, no credentials needed).",
+              file=sys.stderr)
+    return MockBackend()
+
+
+BACKEND = _select_backend()
 WRITES_ENABLED = os.environ.get("FILEVINE_MCP_ALLOW_WRITES") == "1"
 
 
@@ -370,10 +483,31 @@ WRITE_DISABLED_MSG = (
 )
 
 
+def _safe(fn):
+    """Last-resort guard on every tool: turn any raised exception into a clean JSON
+    `error` string rather than a stack trace to the MCP client. FilevineError (live-mode
+    auth/shape/network failures) carries an actionable message; anything else is reported
+    with its type. Mock mode effectively never trips this — the tools already return
+    structured errors for bad input — but it guarantees the client always gets JSON."""
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except FilevineError as e:
+            return json.dumps({"error": str(e), "mode": BACKEND.mode}, indent=2)
+        except Exception as e:  # deliberate last-resort net; never leak a traceback
+            return json.dumps(
+                {"error": f"Unexpected {type(e).__name__}: {e}", "mode": BACKEND.mode},
+                indent=2,
+            )
+    return wrapper
+
+
 # ----------------------------------------------------------------------------- tools
 
 
 @mcp.tool()
+@_safe
 def search_projects(query: str = "", practice_area: str = "", phase: str = "") -> str:
     """Search matters by name/client (query), practice area, and/or phase
     (Intake, Treatment, Demand, Litigation, Settlement). Empty filters match all."""
@@ -393,6 +527,7 @@ def search_projects(query: str = "", practice_area: str = "", phase: str = "") -
 
 
 @mcp.tool()
+@_safe
 def get_project(project_id: int) -> str:
     """Full snapshot of one matter: core fields plus its documents, open tasks, and notes."""
     _audit("get_project", {"project_id": project_id})
@@ -412,6 +547,7 @@ def get_project(project_id: int) -> str:
 
 
 @mcp.tool()
+@_safe
 def list_documents(project_id: int, pending_review_only: bool = False) -> str:
     """Documents on a matter, optionally only those awaiting review."""
     _audit("list_documents", {"project_id": project_id, "pending_review_only": pending_review_only})
@@ -422,6 +558,7 @@ def list_documents(project_id: int, pending_review_only: bool = False) -> str:
 
 
 @mcp.tool()
+@_safe
 def create_task(project_id: int, title: str, assignee: str, due_date: str, priority: str = "medium") -> str:
     """Create a task on a matter (due_date ISO YYYY-MM-DD; priority low|medium|high|critical).
     Requires writes to be enabled by the operator."""
@@ -445,6 +582,7 @@ def create_task(project_id: int, title: str, assignee: str, due_date: str, prior
 
 
 @mcp.tool()
+@_safe
 def add_note(project_id: int, text: str) -> str:
     """Append a note to a matter. Requires writes to be enabled by the operator."""
     _audit("add_note", {"project_id": project_id, "text": text[:200]})
@@ -456,6 +594,7 @@ def add_note(project_id: int, text: str) -> str:
 
 
 @mcp.tool()
+@_safe
 def matter_health_report() -> str:
     """Portfolio-level triage: stale matters (no activity > 21 days), overdue open tasks,
     documents stuck in review, and statute-of-limitations dates inside 180 days.
@@ -578,6 +717,7 @@ def _deadline_entries(p: dict) -> tuple[list[dict], list[dict]]:
 
 
 @mcp.tool()
+@_safe
 def get_deadlines(project_id: int = 0) -> str:
     """Rule-derived deadline chain: SOL, governmental notice windows, discovery
     meet-and-confer clocks, demand/settlement follow-ups. project_id=0 scans the whole
@@ -640,6 +780,7 @@ def _wf_cond(cond: dict, ctx: dict) -> bool:
 
 
 @mcp.tool()
+@_safe
 def list_workflows() -> str:
     """The workflow library: id, name, description, conditions, and actions for each
     declarative workflow available to run_workflow."""
@@ -648,6 +789,7 @@ def list_workflows() -> str:
 
 
 @mcp.tool()
+@_safe
 def run_workflow(workflow_id: str, dry_run: bool = True) -> str:
     """Run a declarative workflow from the library over every matter. DEFAULTS TO DRY RUN:
     returns the exact actions it would take without taking them. Executing for real needs
@@ -733,6 +875,7 @@ SNAPSHOT_SCHEMAS = {
 
 
 @mcp.tool()
+@_safe
 def export_snapshot() -> str:
     """Versioned point-in-time extract of the org (projects, tasks, documents, notes) as
     CSVs with a manifest — a stable schema contract for BI/warehouse pipelines, in the

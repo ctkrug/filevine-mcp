@@ -1,5 +1,5 @@
 # filevine-mcp — recorded demo session
-Recorded 2026-07-14 13:52Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
+Recorded 2026-07-14 14:54Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
 
 ---
 
@@ -353,10 +353,10 @@ Finally: “Snapshot the org for the BI pipeline.” Four CSVs plus a manifest w
 
 ```json
 {
-  "generated": "2026-07-14T13:52:51.627061+00:00",
+  "generated": "2026-07-14T14:54:09.560184+00:00",
   "mode": "mock",
   "schemaVersion": "1.0",
-  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T135251Z",
+  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T145409Z",
   "tables": [
     {
       "table": "projects",
@@ -433,7 +433,7 @@ Every one of the 8 calls this session — including the refused one — is in au
   "auditEntries": 8,
   "lastThree": [
     {
-      "ts": "2026-07-14T13:52:51.621924+00:00",
+      "ts": "2026-07-14T14:54:09.553977+00:00",
       "tool": "create_task",
       "args": {
         "project_id": 10243,
@@ -446,7 +446,7 @@ Every one of the 8 calls this session — including the refused one — is in au
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-14T13:52:51.624389+00:00",
+      "ts": "2026-07-14T14:54:09.556805+00:00",
       "tool": "add_note",
       "args": {
         "project_id": 10243,
@@ -456,7 +456,7 @@ Every one of the 8 calls this session — including the refused one — is in au
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-14T13:52:51.626771+00:00",
+      "ts": "2026-07-14T14:54:09.559671+00:00",
       "tool": "export_snapshot",
       "args": {},
       "mode": "mock",

@@ -55,14 +55,16 @@ proves the mechanism (see the anchor-shift checks).
 ./verify.sh                         # full confidence check: cold clone + smoke + evergreen
 ```
 
-`verify.sh` is the "safe to show someone" gate. It runs three checks and only exits
+`verify.sh` is the "safe to show someone" gate. It runs four checks and only exits
 green if all pass: (1) a **cold clone** of the committed tree builds from zero in a temp
 dir — catching "works on my machine" and anything uncommitted; (2) the full **smoke**
 suite; (3) **evergreen** — time-travels the demo across dates spanning years (plus a leap
 day) and asserts every relative number is identical, proving a reviewer who clones this
-months from now sees the exact same demo. The clock is injected via `FILEVINE_TODAY`
-(see `_today()` in `server.py`), which is how date-dependent behaviour is tested
-deterministically instead of hoping today's date happens to line up.
+months from now sees the exact same demo; (4) **live failure** — points live mode at a
+dead host and bad config and asserts every failure is a clean, actionable message rather
+than a stack trace. The clock is injected via `FILEVINE_TODAY` (see `_today()` in
+`server.py`), which is how date-dependent behaviour is tested deterministically instead of
+hoping today's date happens to line up.
 
 `setup.sh` exists because macOS ships Python 3.9 as `python3` and the `mcp` package
 needs 3.10+ — the #1 way a cold clone fails. `setup_helper.py` prints the exact
@@ -84,7 +86,7 @@ inspector (needs Node): `npx @modelcontextprotocol/inspector .venv/bin/python se
 — or use any MCP client (Cursor, custom agents): command `.venv/bin/python`,
 args `[server.py]`. One-off alternative if you use `uv`: `uv run --with mcp python server.py`.
 
-Live mode (real org — untested, see honest scope notes):
+Live mode (real org — written to the documented flow, untested against a real org; see honest scope notes):
 
 ```bash
 export FILEVINE_CLIENT_ID=...      # Account Manager → Client Secrets
@@ -93,6 +95,18 @@ export FILEVINE_PAT=...            # service-account Personal Access Token
 export FILEVINE_REGION=us          # or ca
 export FILEVINE_MCP_ALLOW_WRITES=1 # only if you mean it
 ```
+
+All three of `CLIENT_ID / CLIENT_SECRET / PAT` switch it to live mode; set only some and it
+**warns and stays in mock mode** rather than silently half-configuring. Auth is lazy — the
+first tool call does the token exchange. **Because the flow is unverified against a real org,
+every live failure is engineered to be legible, not a crash:** an auth rejection, an
+unreachable host, an unexpected response shape, or a bad region all come back as a clean
+`{"error": "..."}` with a specific cause and the reminder that mock mode needs no credentials
+(e.g. `Filevine token exchange failed: HTTP 401 Unauthorized — the PAT or client credentials
+are invalid or expired. (Unset FILEVINE_* to fall back to mock mode.)`). Transient server
+errors (429/502/503/504) get one automatic retry. The whole failure surface is covered by
+`test_live_failure.py` (Gate 4 of `./verify.sh`), which drives it offline against a dead host.
+On-prem/staging hosts: override `FILEVINE_TOKEN_URL` and `FILEVINE_BASE_URL`.
 
 ## Tools
 
