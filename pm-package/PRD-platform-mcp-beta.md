@@ -72,6 +72,9 @@ Filevine controls — and makes every MCP-speaking assistant a distribution chan
 
 - REST API v2 at developer.filevine.io (Stoplight-hosted), US/CA/CJIS environments,
   webhook subscriptions, Certified Partner Integrations program.
+- Published gateway quotas are tight on analytics endpoints (default 320/min; reports/vitals
+  5/min) — a quantitative reason agent-era analytics must hand off to DataBridge rather than
+  loop over REST, which this spec's `describe_snapshot` design assumes.
 - DataBridge ships analytics egress as near-real-time Snowflake shares — the precedent for
   "a governed, schema-stable contract instead of a DIY export."
 - No public first-party MCP artifact as of 2026-07-13.
@@ -131,7 +134,9 @@ Two production deltas from the reference implementation, decided deliberately:
 
 1. Does `run_workflow` route through the LOIS Workflows engine, or is MCP a separate
    execution path? (Product coherence says the former; beta speed may say the latter.)
-2. Pricing/packaging: included in existing API tier, or a LOIS add-on?
+2. Pricing/packaging: LOIS Workflows already meters per Task (June 2026 product
+   specifications) — does MCP usage meter the same way, ride the existing API tier, or stay
+   free as an adoption surface for the agent ecosystem?
 3. Is there an internal MCP effort already scoped that this collides with or feeds?
 4. What did the Certified Partner program learn about partner-side auth pain that should
    change the credential design here?
