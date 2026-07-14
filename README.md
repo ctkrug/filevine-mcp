@@ -52,7 +52,17 @@ proves the mechanism (see the anchor-shift checks).
 ./setup.sh                          # finds Python 3.10+, builds .venv, runs all 31 smoke checks
 .venv/bin/python setup_helper.py    # prints ready-to-paste config for YOUR checkout
 .venv/bin/python demo_agent.py      # re-records demo/transcript.{json,md} live
+./verify.sh                         # full confidence check: cold clone + smoke + evergreen
 ```
+
+`verify.sh` is the "safe to show someone" gate. It runs three checks and only exits
+green if all pass: (1) a **cold clone** of the committed tree builds from zero in a temp
+dir — catching "works on my machine" and anything uncommitted; (2) the full **smoke**
+suite; (3) **evergreen** — time-travels the demo across dates spanning years (plus a leap
+day) and asserts every relative number is identical, proving a reviewer who clones this
+months from now sees the exact same demo. The clock is injected via `FILEVINE_TODAY`
+(see `_today()` in `server.py`), which is how date-dependent behaviour is tested
+deterministically instead of hoping today's date happens to line up.
 
 `setup.sh` exists because macOS ships Python 3.9 as `python3` and the `mcp` package
 needs 3.10+ — the #1 way a cold clone fails. `setup_helper.py` prints the exact

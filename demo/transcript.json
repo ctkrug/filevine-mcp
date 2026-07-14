@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-07-14T00:13:06.320787+00:00",
+  "recorded": "2026-07-14T13:52:51.720312+00:00",
   "mode": "mock",
   "steps": [
     {
@@ -10,7 +10,7 @@
       "tool": "matter_health_report",
       "args": {},
       "result": {
-        "generated": "2026-07-13",
+        "generated": "2026-07-14",
         "staleMatters": [
           {
             "project": "Hale v. Denver Transit Authority",
@@ -32,7 +32,7 @@
             "project": "Whitfield v. Carter Trucking Co.",
             "task": "Review defendant RFP responses Set 1",
             "assignee": "S. Brandt",
-            "dueDate": "2026-06-10",
+            "dueDate": "2026-06-11",
             "daysOverdue": 33,
             "priority": "high"
           },
@@ -40,7 +40,7 @@
             "project": "Whitfield v. Carter Trucking Co.",
             "task": "Schedule client deposition prep",
             "assignee": "D. Okafor",
-            "dueDate": "2026-06-20",
+            "dueDate": "2026-06-21",
             "daysOverdue": 23,
             "priority": "medium"
           },
@@ -48,7 +48,7 @@
             "project": "Estate of Romero v. Lakeside Medical",
             "task": "Conflict check and engagement letter",
             "assignee": "intake.desk",
-            "dueDate": "2026-07-02",
+            "dueDate": "2026-07-03",
             "daysOverdue": 11,
             "priority": "high"
           },
@@ -56,7 +56,7 @@
             "project": "Estate of Romero v. Lakeside Medical",
             "task": "Assign lead attorney",
             "assignee": "S. Brandt",
-            "dueDate": "2026-07-05",
+            "dueDate": "2026-07-06",
             "daysOverdue": 8,
             "priority": "high"
           }
@@ -76,12 +76,12 @@
         "solWithin180Days": [
           {
             "project": "Hale v. Denver Transit Authority",
-            "solDate": "2026-10-02",
+            "solDate": "2026-10-03",
             "daysRemaining": 81
           },
           {
             "project": "Okafor v. BrightPath Insurance",
-            "solDate": "2026-12-09",
+            "solDate": "2026-12-10",
             "daysRemaining": 149
           }
         ],
@@ -98,7 +98,7 @@
       "tool": "get_deadlines",
       "args": {},
       "result": {
-        "generated": "2026-07-13",
+        "generated": "2026-07-14",
         "disclaimer": "Illustrative, Colorado-flavored ruleset to demonstrate deadline chains \u2014 not legal advice. A production implementation would source per-jurisdiction rules and let firms configure their own.",
         "deadlines": [
           {
@@ -106,7 +106,7 @@
             "project": "Whitfield v. Carter Trucking Co.",
             "rule": "Discovery meet-and-confer window",
             "basis": "35 days from service of responses (Whitfield_DefResponses_RFP_Set1.pdf)",
-            "date": "2026-07-01",
+            "date": "2026-07-02",
             "daysRemaining": -12,
             "severity": "overdue"
           },
@@ -115,7 +115,7 @@
             "project": "Okafor v. BrightPath Insurance",
             "rule": "Settlement disbursement clock",
             "basis": "21-day funding/disbursement window from agreement draft (Okafor_SettlementAgreement_DRAFT.docx)",
-            "date": "2026-08-01",
+            "date": "2026-08-02",
             "daysRemaining": 19,
             "severity": "critical"
           },
@@ -124,7 +124,7 @@
             "project": "Alvarez v. Summit Logistics",
             "rule": "Demand response follow-up",
             "basis": "30-day insurer response window from latest demand doc (Alvarez_DemandLetter_DRAFT_v3.docx)",
-            "date": "2026-08-07",
+            "date": "2026-08-08",
             "daysRemaining": 25,
             "severity": "critical"
           },
@@ -133,7 +133,7 @@
             "project": "Hale v. Denver Transit Authority",
             "rule": "Governmental notice of claim",
             "basis": "CGIA-style 182-day notice from incident date",
-            "date": "2026-10-01",
+            "date": "2026-10-02",
             "daysRemaining": 80,
             "severity": "high"
           },
@@ -142,7 +142,7 @@
             "project": "Hale v. Denver Transit Authority",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2026-10-02",
+            "date": "2026-10-03",
             "daysRemaining": 81,
             "severity": "high"
           },
@@ -151,7 +151,7 @@
             "project": "Okafor v. BrightPath Insurance",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2026-12-09",
+            "date": "2026-12-10",
             "daysRemaining": 149,
             "severity": "medium"
           },
@@ -160,7 +160,7 @@
             "project": "Whitfield v. Carter Trucking Co.",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2027-06-22",
+            "date": "2027-06-23",
             "daysRemaining": 344,
             "severity": "low"
           },
@@ -169,7 +169,7 @@
             "project": "Alvarez v. Summit Logistics",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2027-11-03",
+            "date": "2027-11-04",
             "daysRemaining": 478,
             "severity": "low"
           },
@@ -178,7 +178,7 @@
             "project": "Nguyen v. Ridgeline Property Group",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2028-02-14",
+            "date": "2028-02-15",
             "daysRemaining": 581,
             "severity": "low"
           },
@@ -187,7 +187,7 @@
             "project": "Estate of Romero v. Lakeside Medical",
             "rule": "Statute of limitations",
             "basis": "Matter SOL date on file",
-            "date": "2028-05-30",
+            "date": "2028-05-31",
             "daysRemaining": 687,
             "severity": "low"
           }
@@ -224,31 +224,31 @@
             "type": "create_task",
             "projectId": 10245,
             "project": "Okafor v. BrightPath Insurance",
-            "title": "SOL/notice filing-readiness check: Okafor v. BrightPath Insurance (deadline 2026-12-09)",
+            "title": "SOL/notice filing-readiness check: Okafor v. BrightPath Insurance (deadline 2026-12-10)",
             "assignee": "S. Brandt",
-            "dueDate": "2026-07-20",
+            "dueDate": "2026-07-21",
             "priority": "critical"
           },
           {
             "type": "add_note",
             "projectId": 10245,
             "project": "Okafor v. BrightPath Insurance",
-            "text": "[sol-watchdog] SOL/notice date 2026-12-09 is 149 days out. Filing-readiness task created for S. Brandt."
+            "text": "[sol-watchdog] SOL/notice date 2026-12-10 is 149 days out. Filing-readiness task created for S. Brandt."
           },
           {
             "type": "create_task",
             "projectId": 10246,
             "project": "Hale v. Denver Transit Authority",
-            "title": "SOL/notice filing-readiness check: Hale v. Denver Transit Authority (deadline 2026-10-02)",
+            "title": "SOL/notice filing-readiness check: Hale v. Denver Transit Authority (deadline 2026-10-03)",
             "assignee": "D. Okafor",
-            "dueDate": "2026-07-20",
+            "dueDate": "2026-07-21",
             "priority": "critical"
           },
           {
             "type": "add_note",
             "projectId": 10246,
             "project": "Hale v. Denver Transit Authority",
-            "text": "[sol-watchdog] SOL/notice date 2026-10-02 is 81 days out. Filing-readiness task created for D. Okafor."
+            "text": "[sol-watchdog] SOL/notice date 2026-10-03 is 81 days out. Filing-readiness task created for D. Okafor."
           }
         ],
         "skipped": []
@@ -301,7 +301,7 @@
             "projectId": 10243,
             "title": "Reactivate: Whitfield v. Carter Trucking Co. \u2014 46 days without activity",
             "assignee": "D. Okafor",
-            "dueDate": "2026-07-16",
+            "dueDate": "2026-07-17",
             "status": "open",
             "priority": "high"
           },
@@ -309,15 +309,15 @@
             "noteId": 7101,
             "projectId": 10243,
             "authorId": "mcp-agent",
-            "date": "2026-07-13",
-            "text": "[stale-matter-sweep] No matter activity in 46 days (last touch 2026-05-28). Reactivation task filed to D. Okafor."
+            "date": "2026-07-14",
+            "text": "[stale-matter-sweep] No matter activity in 46 days (last touch 2026-05-29). Reactivation task filed to D. Okafor."
           },
           {
             "taskId": 9102,
             "projectId": 10246,
             "title": "Reactivate: Hale v. Denver Transit Authority \u2014 74 days without activity",
             "assignee": "D. Okafor",
-            "dueDate": "2026-07-16",
+            "dueDate": "2026-07-17",
             "status": "open",
             "priority": "high"
           },
@@ -325,8 +325,8 @@
             "noteId": 7102,
             "projectId": 10246,
             "authorId": "mcp-agent",
-            "date": "2026-07-13",
-            "text": "[stale-matter-sweep] No matter activity in 74 days (last touch 2026-04-30). Reactivation task filed to D. Okafor."
+            "date": "2026-07-14",
+            "text": "[stale-matter-sweep] No matter activity in 74 days (last touch 2026-05-01). Reactivation task filed to D. Okafor."
           }
         ],
         "skipped": []
@@ -342,7 +342,7 @@
         "project_id": 10243,
         "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed",
         "assignee": "D. Okafor",
-        "due_date": "2026-07-15",
+        "due_date": "2026-07-16",
         "priority": "critical"
       },
       "result": {
@@ -351,7 +351,7 @@
           "projectId": 10243,
           "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed",
           "assignee": "D. Okafor",
-          "dueDate": "2026-07-15",
+          "dueDate": "2026-07-16",
           "status": "open",
           "priority": "critical"
         }
@@ -365,15 +365,15 @@
       "tool": "add_note",
       "args": {
         "project_id": 10243,
-        "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-27) closed 2026-07-01. Escalation task filed to D. Okafor 2026-07-13; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
+        "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
       },
       "result": {
         "created": {
           "noteId": 7103,
           "projectId": 10243,
           "authorId": "mcp-agent",
-          "date": "2026-07-13",
-          "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-27) closed 2026-07-01. Escalation task filed to D. Okafor 2026-07-13; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
+          "date": "2026-07-14",
+          "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
         }
       }
     },
@@ -385,10 +385,10 @@
       "tool": "export_snapshot",
       "args": {},
       "result": {
-        "generated": "2026-07-14T00:13:06.243765+00:00",
+        "generated": "2026-07-14T13:52:51.627061+00:00",
         "mode": "mock",
         "schemaVersion": "1.0",
-        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T001306Z",
+        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T135251Z",
         "tables": [
           {
             "table": "projects",
@@ -465,30 +465,30 @@
         "auditEntries": 8,
         "lastThree": [
           {
-            "ts": "2026-07-14T00:13:06.239073+00:00",
+            "ts": "2026-07-14T13:52:51.621924+00:00",
             "tool": "create_task",
             "args": {
               "project_id": 10243,
               "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed",
               "assignee": "D. Okafor",
-              "due_date": "2026-07-15",
+              "due_date": "2026-07-16",
               "priority": "critical"
             },
             "mode": "mock",
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-14T00:13:06.241347+00:00",
+            "ts": "2026-07-14T13:52:51.624389+00:00",
             "tool": "add_note",
             "args": {
               "project_id": 10243,
-              "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-27) closed 2026-07-01. Escalation task filed to D. Okafor 2026-07-13; recommend serving deficiency letter with the me"
+              "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the me"
             },
             "mode": "mock",
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-14T00:13:06.243418+00:00",
+            "ts": "2026-07-14T13:52:51.626771+00:00",
             "tool": "export_snapshot",
             "args": {},
             "mode": "mock",

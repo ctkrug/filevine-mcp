@@ -84,6 +84,14 @@ FIXTURE_ANCHOR = date.fromisoformat(os.environ.get("FILEVINE_FIXTURE_ANCHOR", "2
 _ISO_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
 
 
+def _today() -> date:
+    """Wall-clock 'today', overridable via FILEVINE_TODAY (ISO date) for deterministic
+    date tests. Injecting the clock is how the evergreen guarantee gets proven across
+    the calendar — every date-derived number in the demo flows through this one function."""
+    override = os.environ.get("FILEVINE_TODAY")
+    return date.fromisoformat(override) if override else date.today()
+
+
 class MockBackend:
     """Bundled fixture data - six plaintiff-side matters. No credentials needed.
 
@@ -96,7 +104,7 @@ class MockBackend:
     mode = "mock"
 
     def __init__(self) -> None:
-        shift = (date.today() - FIXTURE_ANCHOR).days
+        shift = (_today() - FIXTURE_ANCHOR).days
         raw = (HERE / "fixtures.json").read_text()
         self._db = self._shift_dates(json.loads(raw), shift)
         self._next_task_id = 9100
@@ -151,7 +159,7 @@ class MockBackend:
             "noteId": self._next_note_id,
             "projectId": project_id,
             "authorId": "mcp-agent",
-            "date": date.today().isoformat(),
+            "date": _today().isoformat(),
             "text": text,
         }
         self._db["notes"].append(note)
@@ -340,7 +348,7 @@ def _iso(value) -> date | None:
 
 def _days_since(iso: str) -> int | None:
     d = _iso(iso)
-    return (date.today() - d).days if d else None
+    return (_today() - d).days if d else None
 
 
 def _project_or_error(project_id: int) -> dict | None:
@@ -453,7 +461,7 @@ def matter_health_report() -> str:
     documents stuck in review, and statute-of-limitations dates inside 180 days.
     The 'what needs attention before someone asks' view."""
     _audit("matter_health_report", {})
-    today = date.today()
+    today = _today()
     projects = {p["projectId"]: p for p in BACKEND.projects()}
     gaps = 0
 
@@ -514,7 +522,7 @@ DEADLINE_DISCLAIMER = (
 
 def _deadline_entries(p: dict) -> tuple[list[dict], list[dict]]:
     """Rule-based deadline chain for one matter -> (triggered, untriggered)."""
-    today = date.today()
+    today = _today()
     docs = [d for d in BACKEND.documents() if d["projectId"] == p["projectId"]]
     out: list[dict] = []
     pending: list[dict] = []
@@ -587,7 +595,7 @@ def get_deadlines(project_id: int = 0) -> str:
         triggered += t
         untriggered += u
     triggered.sort(key=lambda x: x["date"])
-    return json.dumps({"generated": date.today().isoformat(),
+    return json.dumps({"generated": _today().isoformat(),
                        "disclaimer": DEADLINE_DISCLAIMER,
                        "deadlines": triggered,
                        "notYetTriggered": untriggered}, indent=2)
@@ -614,7 +622,7 @@ class _SafeCtx(dict):
 def _wf_context(p: dict) -> _SafeCtx | None:
     """Condition/template context for one matter; None if the matter is missing the
     dates workflows condition on (live-mode gap) — such matters are skipped, never guessed."""
-    today = date.today()
+    today = _today()
     sol = _iso(p.get("sol_date"))
     quiet = _days_since(p.get("lastActivity"))
     opened = _days_since(p.get("openedDate"))
@@ -653,7 +661,7 @@ def run_workflow(workflow_id: str, dry_run: bool = True) -> str:
     if not dry_run and not WRITES_ENABLED:
         return json.dumps({"error": WRITE_DISABLED_MSG, "hint": "Re-run with dry_run=true to preview."})
 
-    today = date.today()
+    today = _today()
     planned: list[dict] = []
     skipped: list[dict] = []
     matched: list[str] = []
