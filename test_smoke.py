@@ -23,6 +23,11 @@ try:
 except ImportError:
     sys.exit("The 'mcp' package isn't installed here — run ./setup.sh, then .venv/bin/python test_smoke.py")
 
+# The fixture anchor the server defaults to (server.py). The anchor-shift check below
+# measures deltas against THIS, not against today() — otherwise the assertions only hold
+# on the single calendar day the default anchor names, and every other day fails smoke.
+from server import FIXTURE_ANCHOR as DEFAULT_ANCHOR
+
 EXPORT_TMP = tempfile.mkdtemp(prefix="fv-mcp-export-")
 SERVER = StdioServerParameters(
     command=sys.executable,
@@ -148,13 +153,15 @@ async def main() -> None:
             check("health summary resource reads", "Portfolio health" in res.contents[0].text)
 
     # --- anchor-shift mechanism: the reason the demo is evergreen --------------
-    # Every load shifts fixture dates by (today - anchor). Overriding the anchor to
-    # 30 days ago must move every derived number by exactly +30 — proving relative
-    # time is preserved on any future clone (where shift = today - real anchor).
+    # Every load shifts fixture dates by (today - anchor), so daysRemaining = stored - anchor
+    # regardless of today. Overriding the anchor to 30 days BEFORE the default anchor must move
+    # every derived number by exactly +30 — proving relative time is preserved on any future
+    # clone. (Anchoring the override to today() instead would only pass on the one day today
+    # equals the default anchor; every other day is off by today - DEFAULT_ANCHOR.)
     aged = StdioServerParameters(
         command=sys.executable, args=["server.py"],
         env={**os.environ, "FILEVINE_MCP_ALLOW_WRITES": "0", "FILEVINE_EXPORT_DIR": EXPORT_TMP,
-             "FILEVINE_FIXTURE_ANCHOR": (date.today() - timedelta(days=30)).isoformat()},
+             "FILEVINE_FIXTURE_ANCHOR": (DEFAULT_ANCHOR - timedelta(days=30)).isoformat()},
     )
     async with stdio_client(aged) as (read, write):
         async with ClientSession(read, write) as s:
