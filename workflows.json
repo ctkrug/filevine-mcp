@@ -1,0 +1,72 @@
+{
+  "workflows": [
+    {
+      "workflowId": "sol-watchdog",
+      "name": "SOL & Notice Watchdog",
+      "description": "Scan open matters for statute-of-limitations or notice deadlines inside the warning window. For each hit, file a critical filing-readiness task to the lead attorney and stamp the matter with an explanatory note. Idempotent: skips matters that already have an open watchdog task.",
+      "conditions": [
+        {"field": "days_to_sol", "op": "gte", "value": 0},
+        {"field": "days_to_sol", "op": "lte", "value": 180}
+      ],
+      "actions": [
+        {
+          "type": "create_task",
+          "title": "SOL/notice filing-readiness check: {projectName} (deadline {sol_date})",
+          "assignee": "{leadAttorney}",
+          "due_in_days": 7,
+          "priority": "critical",
+          "skip_if_open_task_contains": "SOL/notice filing-readiness"
+        },
+        {
+          "type": "add_note",
+          "text": "[sol-watchdog] SOL/notice date {sol_date} is {days_to_sol} days out. Filing-readiness task created for {leadAttorney}."
+        }
+      ]
+    },
+    {
+      "workflowId": "intake-triage",
+      "name": "New Intake Triage",
+      "description": "For matters in Intake phase: ensure a lead-attorney assignment task exists (skipped if one is already open), and stamp a triage note with intake age. The 'no intake sits unowned' rule.",
+      "conditions": [
+        {"field": "phase", "op": "eq", "value": "Intake"}
+      ],
+      "actions": [
+        {
+          "type": "create_task",
+          "title": "Assign lead attorney: {projectName}",
+          "assignee": "S. Brandt",
+          "due_in_days": 2,
+          "priority": "high",
+          "only_if": {"field": "leadAttorney", "op": "eq", "value": "unassigned"},
+          "skip_if_open_task_contains": "Assign lead attorney"
+        },
+        {
+          "type": "add_note",
+          "text": "[intake-triage] Triage run: lead attorney is {leadAttorney}, intake opened {openedDate} ({days_since_opened} days ago)."
+        }
+      ]
+    },
+    {
+      "workflowId": "stale-matter-sweep",
+      "name": "Stale Matter Sweep",
+      "description": "For matters with no activity in more than 21 days, file a reactivation task to the lead attorney and note the gap. Clients notice silence before firms do; this closes that gap.",
+      "conditions": [
+        {"field": "days_since_activity", "op": "gt", "value": 21}
+      ],
+      "actions": [
+        {
+          "type": "create_task",
+          "title": "Reactivate: {projectName} — {days_since_activity} days without activity",
+          "assignee": "{leadAttorney}",
+          "due_in_days": 3,
+          "priority": "high",
+          "skip_if_open_task_contains": "Reactivate:"
+        },
+        {
+          "type": "add_note",
+          "text": "[stale-matter-sweep] No matter activity in {days_since_activity} days (last touch {lastActivity}). Reactivation task filed to {leadAttorney}."
+        }
+      ]
+    }
+  ]
+}

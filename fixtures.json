@@ -1,0 +1,113 @@
+{
+  "projects": [
+    {
+      "projectId": 10241,
+      "projectName": "Alvarez v. Summit Logistics",
+      "clientName": "Maria Alvarez",
+      "practiceArea": "Personal Injury - Auto",
+      "phase": "Demand",
+      "incidentDate": "2025-11-03",
+      "openedDate": "2025-11-20",
+      "lastActivity": "2026-07-10",
+      "leadAttorney": "D. Okafor",
+      "sol_date": "2027-11-03",
+      "estValue": 240000
+    },
+    {
+      "projectId": 10242,
+      "projectName": "Nguyen v. Ridgeline Property Group",
+      "clientName": "Peter Nguyen",
+      "practiceArea": "Premises Liability",
+      "phase": "Treatment",
+      "incidentDate": "2026-02-14",
+      "openedDate": "2026-03-01",
+      "lastActivity": "2026-07-11",
+      "leadAttorney": "S. Brandt",
+      "sol_date": "2028-02-14",
+      "estValue": 95000
+    },
+    {
+      "projectId": 10243,
+      "projectName": "Whitfield v. Carter Trucking Co.",
+      "clientName": "James Whitfield",
+      "practiceArea": "Personal Injury - Commercial Vehicle",
+      "phase": "Litigation",
+      "incidentDate": "2025-06-22",
+      "openedDate": "2025-07-15",
+      "lastActivity": "2026-05-28",
+      "leadAttorney": "D. Okafor",
+      "sol_date": "2027-06-22",
+      "estValue": 780000
+    },
+    {
+      "projectId": 10244,
+      "projectName": "Estate of Romero v. Lakeside Medical",
+      "clientName": "Ana Romero (PR)",
+      "practiceArea": "Medical Malpractice",
+      "phase": "Intake",
+      "incidentDate": "2026-05-30",
+      "openedDate": "2026-06-25",
+      "lastActivity": "2026-06-25",
+      "leadAttorney": "unassigned",
+      "sol_date": "2028-05-30",
+      "estValue": null
+    },
+    {
+      "projectId": 10245,
+      "projectName": "Okafor v. BrightPath Insurance",
+      "clientName": "Chidi Okafor",
+      "practiceArea": "Bad Faith",
+      "phase": "Settlement",
+      "incidentDate": "2024-12-09",
+      "openedDate": "2025-01-10",
+      "lastActivity": "2026-07-12",
+      "leadAttorney": "S. Brandt",
+      "sol_date": "2026-12-09",
+      "estValue": 150000
+    },
+    {
+      "projectId": 10246,
+      "projectName": "Hale v. Denver Transit Authority",
+      "clientName": "Rebecca Hale",
+      "practiceArea": "Personal Injury - Public Entity",
+      "phase": "Treatment",
+      "incidentDate": "2026-04-02",
+      "openedDate": "2026-04-18",
+      "lastActivity": "2026-04-30",
+      "leadAttorney": "D. Okafor",
+      "sol_date": "2026-10-02",
+      "estValue": 60000
+    }
+  ],
+  "documents": [
+    {"documentId": 501, "projectId": 10241, "filename": "Alvarez_MedicalRecords_StJoes.pdf", "docType": "Medical Records", "uploadedDate": "2026-06-20", "reviewStatus": "reviewed", "pages": 214},
+    {"documentId": 502, "projectId": 10241, "filename": "Alvarez_DemandLetter_DRAFT_v3.docx", "docType": "Demand Letter", "uploadedDate": "2026-07-08", "reviewStatus": "pending_review", "pages": 18},
+    {"documentId": 503, "projectId": 10241, "filename": "Alvarez_LostWages_EmployerLetter.pdf", "docType": "Damages", "uploadedDate": "2026-07-01", "reviewStatus": "reviewed", "pages": 3},
+    {"documentId": 504, "projectId": 10242, "filename": "Nguyen_IncidentPhotos.zip", "docType": "Evidence", "uploadedDate": "2026-03-05", "reviewStatus": "reviewed", "pages": null},
+    {"documentId": 505, "projectId": 10242, "filename": "Nguyen_PT_Records_Apex.pdf", "docType": "Medical Records", "uploadedDate": "2026-07-09", "reviewStatus": "pending_review", "pages": 88},
+    {"documentId": 506, "projectId": 10243, "filename": "Whitfield_Complaint_FILED.pdf", "docType": "Pleading", "uploadedDate": "2026-01-15", "reviewStatus": "reviewed", "pages": 24},
+    {"documentId": 507, "projectId": 10243, "filename": "Whitfield_DefResponses_RFP_Set1.pdf", "docType": "Discovery", "uploadedDate": "2026-05-27", "reviewStatus": "pending_review", "pages": 156},
+    {"documentId": 508, "projectId": 10244, "filename": "Romero_IntakeQuestionnaire.pdf", "docType": "Intake", "uploadedDate": "2026-06-25", "reviewStatus": "pending_review", "pages": 9},
+    {"documentId": 509, "projectId": 10245, "filename": "Okafor_SettlementAgreement_DRAFT.docx", "docType": "Settlement", "uploadedDate": "2026-07-11", "reviewStatus": "pending_review", "pages": 12},
+    {"documentId": 510, "projectId": 10246, "filename": "Hale_ER_Records_DenverHealth.pdf", "docType": "Medical Records", "uploadedDate": "2026-04-28", "reviewStatus": "reviewed", "pages": 47}
+  ],
+  "tasks": [
+    {"taskId": 9001, "projectId": 10241, "title": "Partner review of demand letter v3", "assignee": "D. Okafor", "dueDate": "2026-07-15", "status": "open", "priority": "high"},
+    {"taskId": 9002, "projectId": 10241, "title": "Confirm final medical specials total", "assignee": "paralegal.t", "dueDate": "2026-07-14", "status": "open", "priority": "high"},
+    {"taskId": 9003, "projectId": 10242, "title": "Request updated PT treatment plan", "assignee": "paralegal.m", "dueDate": "2026-07-18", "status": "open", "priority": "medium"},
+    {"taskId": 9004, "projectId": 10243, "title": "Review defendant RFP responses Set 1", "assignee": "S. Brandt", "dueDate": "2026-06-10", "status": "open", "priority": "high"},
+    {"taskId": 9005, "projectId": 10243, "title": "Schedule client deposition prep", "assignee": "D. Okafor", "dueDate": "2026-06-20", "status": "open", "priority": "medium"},
+    {"taskId": 9006, "projectId": 10244, "title": "Conflict check and engagement letter", "assignee": "intake.desk", "dueDate": "2026-07-02", "status": "open", "priority": "high"},
+    {"taskId": 9007, "projectId": 10244, "title": "Assign lead attorney", "assignee": "S. Brandt", "dueDate": "2026-07-05", "status": "open", "priority": "high"},
+    {"taskId": 9008, "projectId": 10245, "title": "Client signature on settlement agreement", "assignee": "paralegal.t", "dueDate": "2026-07-16", "status": "open", "priority": "high"},
+    {"taskId": 9009, "projectId": 10246, "title": "File CGIA notice of claim", "assignee": "D. Okafor", "dueDate": "2026-07-20", "status": "open", "priority": "critical"},
+    {"taskId": 9010, "projectId": 10241, "title": "Order certified crash report", "assignee": "paralegal.m", "dueDate": "2026-05-30", "status": "done", "priority": "medium"}
+  ],
+  "notes": [
+    {"noteId": 7001, "projectId": 10241, "authorId": "D. Okafor", "date": "2026-07-10", "text": "Demand v3 incorporates final specials of $88,400. Target send date 7/18 pending partner review."},
+    {"noteId": 7002, "projectId": 10243, "authorId": "S. Brandt", "date": "2026-05-28", "text": "Def counsel produced RFP Set 1 responses — 156 pages, multiple objections. Needs full review before meet-and-confer."},
+    {"noteId": 7003, "projectId": 10244, "authorId": "intake.desk", "date": "2026-06-25", "text": "Intake complete. Records request to Lakeside pending conflict check. NOTE: potential expert conflict — Dr. Feld consulted for defendant in 2024 matter."},
+    {"noteId": 7004, "projectId": 10246, "authorId": "D. Okafor", "date": "2026-04-30", "text": "Public entity defendant — CGIA 182-day notice deadline applies. Calendared for July. DO NOT MISS."},
+    {"noteId": 7005, "projectId": 10245, "authorId": "S. Brandt", "date": "2026-07-12", "text": "Adjuster confirmed $150k. Agreement draft out for client signature."}
+  ]
+}
