@@ -1,5 +1,5 @@
 # filevine-mcp — recorded demo session
-Recorded 2026-07-13 23:29Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
+Recorded 2026-07-14 00:13Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
 
 ---
 
@@ -353,10 +353,10 @@ Finally: “Snapshot the org for the BI pipeline.” Four CSVs plus a manifest w
 
 ```json
 {
-  "generated": "2026-07-13T23:29:09.594371+00:00",
+  "generated": "2026-07-14T00:13:06.243765+00:00",
   "mode": "mock",
   "schemaVersion": "1.0",
-  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260713T232909Z",
+  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T001306Z",
   "tables": [
     {
       "table": "projects",
@@ -373,6 +373,9 @@ Finally: “Snapshot the org for the BI pipeline.” Four CSVs plus a manifest w
         "lastActivity",
         "leadAttorney",
         "sol_date",
+        "court",
+        "caseNumber",
+        "opposingCounsel",
         "estValue"
       ]
     },
@@ -430,7 +433,7 @@ Every one of the 8 calls this session — including the refused one — is in au
   "auditEntries": 8,
   "lastThree": [
     {
-      "ts": "2026-07-13T23:29:09.589609+00:00",
+      "ts": "2026-07-14T00:13:06.239073+00:00",
       "tool": "create_task",
       "args": {
         "project_id": 10243,
@@ -443,7 +446,7 @@ Every one of the 8 calls this session — including the refused one — is in au
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-13T23:29:09.591929+00:00",
+      "ts": "2026-07-14T00:13:06.241347+00:00",
       "tool": "add_note",
       "args": {
         "project_id": 10243,
@@ -453,7 +456,7 @@ Every one of the 8 calls this session — including the refused one — is in au
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-13T23:29:09.594033+00:00",
+      "ts": "2026-07-14T00:13:06.243418+00:00",
       "tool": "export_snapshot",
       "args": {},
       "mode": "mock",

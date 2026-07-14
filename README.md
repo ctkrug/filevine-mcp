@@ -40,33 +40,39 @@ reactive → proactive, expressed as MCP tools.
 credentials — which doubles as the self-serve sandbox Filevine's platform doesn't ship
 today. Real credentials flip it to live mode via the *documented* auth flow (see below).
 
-## Quickstart
+**Evergreen fixtures.** Every date in the fixtures (fields *and* dates inside note text)
+shifts by `today − anchor` at load: Whitfield is always 46 days stale, Hale's SOL is
+always 81 days out, the blown meet-and-confer window always closed 12 days ago — clone
+this repo six months from now and the demo reads exactly the same. The smoke suite
+proves the mechanism (see the anchor-shift checks).
+
+## Quickstart (macOS / Linux)
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install mcp   # Python 3.10+
-.venv/bin/python test_smoke.py                        # 26 checks over stdio
-.venv/bin/python demo_agent.py                        # records demo/transcript.{json,md}
+./setup.sh                          # finds Python 3.10+, builds .venv, runs all 31 smoke checks
+.venv/bin/python setup_helper.py    # prints ready-to-paste config for YOUR checkout
+.venv/bin/python demo_agent.py      # re-records demo/transcript.{json,md} live
 ```
 
-Claude Code:
+`setup.sh` exists because macOS ships Python 3.9 as `python3` and the `mcp` package
+needs 3.10+ — the #1 way a cold clone fails. `setup_helper.py` prints the exact
+`claude mcp add` command, Claude Desktop JSON, generic MCP-client config, and an
+MCP Inspector one-liner with absolute paths already filled in (backlog issue A2,
+practiced on itself).
 
-```bash
-claude mcp add filevine -- /path/to/filevine-mcp/.venv/bin/python /path/to/filevine-mcp/server.py
+**Windows** (untested by the author — no Windows machine; these are the standard equivalents):
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\pip install mcp
+.venv\Scripts\python test_smoke.py
+.venv\Scripts\python setup_helper.py
 ```
 
-Claude Desktop (`claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "filevine": {
-      "command": "/path/to/filevine-mcp/.venv/bin/python",
-      "args": ["/path/to/filevine-mcp/server.py"],
-      "env": { "FILEVINE_MCP_ALLOW_WRITES": "0" }
-    }
-  }
-}
-```
+**No Claude account handy?** Poke the tools from a browser with the official
+inspector (needs Node): `npx @modelcontextprotocol/inspector .venv/bin/python server.py`
+— or use any MCP client (Cursor, custom agents): command `.venv/bin/python`,
+args `[server.py]`. One-off alternative if you use `uv`: `uv run --with mcp python server.py`.
 
 Live mode (real org — untested, see honest scope notes):
 
@@ -115,13 +121,36 @@ trail recap. Every tool result in it is real server output.
 - **`backlog.md`** — 16 issues across 5 epics, each with user story + acceptance criteria.
 - **`release-notes-draft.md`** — customer-facing announcement + internal enablement note.
 
+## Troubleshooting (the live-on-a-call checklist)
+
+- **`ModuleNotFoundError: No module named 'mcp'` or a version complaint** → you ran the
+  system Python. Run `./setup.sh` once, then always use `.venv/bin/python`. Both entry
+  points now exit with exactly this instruction instead of a stack trace.
+- **Claude shows "failed to connect" for the server** → the configured command probably
+  points at the wrong Python. Run `.venv/bin/python setup_helper.py` and paste its output
+  verbatim; for Claude Desktop, fully quit and reopen the app after editing the config.
+- **Agent says it can't create tasks** → that's the read-only default working. Set
+  `FILEVINE_MCP_ALLOW_WRITES=1` in the server's env block and reconnect — deliberately a
+  human step.
+- **"Unknown assignee"** → tasks must land on a real desk; the error lists the org's
+  known people (mock org: D. Okafor, S. Brandt, paralegal.t, paralegal.m, intake.desk).
+- **Numbers don't match the recorded transcript exactly** → the recorded transcript is a
+  point-in-time capture; live runs re-derive from the evergreen fixtures, so the *day
+  counts* (46 stale, 81 to SOL, −12 meet-and-confer) always match even when calendar
+  dates differ.
+- **Mock state resets when the server restarts** → by design: the org is rebuilt from
+  fixtures per process, so every demo starts clean. Created tasks/notes persist for the
+  life of the session only. The audit trail (`audit.jsonl`) does persist across restarts.
+
 ## Honest scope notes
 
 - **Live mode is written to Filevine's documented flow but untested against a real org** —
   I don't have credentials as an outside candidate, and there's no public sandbox. The
   documented flow (PAT token exchange at identity.filevine.com, `GetUserOrgsWithToken`
   bootstrap, `x-fv-orgid`/`x-fv-userid` headers, US/CA hosts) is implemented in
-  `LiveBackend`; mock mode is the fully tested path (26 smoke checks, both permission modes).
+  `LiveBackend`; mock mode is the fully tested path (31 smoke checks read-only, 33 with
+  writes). Live mode fails soft by design: unrecognized field shapes are normalized where
+  possible and skipped-and-reported (`dataGaps`) where not — never guessed.
 - Deadline rules are illustrative (Colorado-flavored) to demonstrate the chain concept —
   not legal advice; a real product sources per-jurisdiction rulesets.
 - Fixture data is invented; any resemblance to real parties is coincidental.

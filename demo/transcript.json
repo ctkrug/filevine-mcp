@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-07-13T23:29:09.673119+00:00",
+  "recorded": "2026-07-14T00:13:06.320787+00:00",
   "mode": "mock",
   "steps": [
     {
@@ -385,10 +385,10 @@
       "tool": "export_snapshot",
       "args": {},
       "result": {
-        "generated": "2026-07-13T23:29:09.594371+00:00",
+        "generated": "2026-07-14T00:13:06.243765+00:00",
         "mode": "mock",
         "schemaVersion": "1.0",
-        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260713T232909Z",
+        "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T001306Z",
         "tables": [
           {
             "table": "projects",
@@ -405,6 +405,9 @@
               "lastActivity",
               "leadAttorney",
               "sol_date",
+              "court",
+              "caseNumber",
+              "opposingCounsel",
               "estValue"
             ]
           },
@@ -462,7 +465,7 @@
         "auditEntries": 8,
         "lastThree": [
           {
-            "ts": "2026-07-13T23:29:09.589609+00:00",
+            "ts": "2026-07-14T00:13:06.239073+00:00",
             "tool": "create_task",
             "args": {
               "project_id": 10243,
@@ -475,7 +478,7 @@
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-13T23:29:09.591929+00:00",
+            "ts": "2026-07-14T00:13:06.241347+00:00",
             "tool": "add_note",
             "args": {
               "project_id": 10243,
@@ -485,7 +488,7 @@
             "writes_enabled": true
           },
           {
-            "ts": "2026-07-13T23:29:09.594033+00:00",
+            "ts": "2026-07-14T00:13:06.243418+00:00",
             "tool": "export_snapshot",
             "args": {},
             "mode": "mock",

@@ -5,14 +5,23 @@ Run:  python3 test_smoke.py                       (read-only mode)
 Exit 0 = all checks passed.
 """
 
+import sys
+
+if sys.version_info < (3, 10):
+    sys.exit("test_smoke.py needs Python 3.10+ — run ./setup.sh (it finds one and builds the venv).")
+
 import asyncio
 import json
 import os
-import sys
+import subprocess
 import tempfile
+from datetime import date, timedelta
 
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+try:
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+except ImportError:
+    sys.exit("The 'mcp' package isn't installed here — run ./setup.sh, then .venv/bin/python test_smoke.py")
 
 EXPORT_TMP = tempfile.mkdtemp(prefix="fv-mcp-export-")
 SERVER = StdioServerParameters(
@@ -55,6 +64,9 @@ async def main() -> None:
             r = await call("search_projects", {"phase": "Treatment"})
             check("phase filter returns 2 matters", r["count"] == 2)
 
+            r = await call("search_projects", {"query": "zzz-no-such-client"})
+            check("zero-result search returns a teaching hint", r["count"] == 0 and "hint" in r)
+
             r = await call("get_project", {"project_id": 10243})
             check("get_project returns docs+tasks+notes",
                   len(r["documents"]) == 2 and len(r["openTasks"]) == 2 and len(r["notes"]) == 1)
@@ -81,6 +93,9 @@ async def main() -> None:
                 "Whitfield" in d["project"] and d["severity"] == "overdue" for d in r["deadlines"]))
             check("deadlines: sorted soonest-first",
                   [d["date"] for d in r["deadlines"]] == sorted(d["date"] for d in r["deadlines"]))
+            check("deadlines: Hale SOL is exactly 81 days out (evergreen fixtures)", any(
+                "Hale" in d["project"] and d["rule"] == "Statute of limitations"
+                and d["daysRemaining"] == 81 for d in r["deadlines"]))
             check("deadlines: Romero cert-of-review pending trigger",
                   any("Romero" in u["project"] for u in r["notYetTriggered"]))
             r = await call("get_deadlines", {"project_id": 99999})
@@ -110,10 +125,16 @@ async def main() -> None:
                 check("live workflow reports executed actions", len(r["executedActions"]) >= 2)
 
             # --- writes gate -----------------------------------------------------
-            r = await call("create_task", {"project_id": 10241, "title": "t", "assignee": "a",
-                                           "due_date": "2026-08-01"})
+            due = (date.today() + timedelta(days=30)).isoformat()
+            r = await call("create_task", {"project_id": 10241, "title": "t", "assignee": "paralegal.t",
+                                           "due_date": due})
             check("create_task gated by write flag" if not writes else "create_task works with writes on",
                   ("error" in r) != writes)
+            if writes:
+                r = await call("create_task", {"project_id": 10241, "title": "t",
+                                               "assignee": "Bob Nobody", "due_date": due})
+                check("create_task refuses unknown assignee with a teaching error",
+                      "error" in r and "Known people" in r["error"])
 
             # --- snapshot export -------------------------------------------------
             r = await call("export_snapshot")
@@ -125,6 +146,32 @@ async def main() -> None:
 
             res = await s.read_resource("filevine://health/summary")
             check("health summary resource reads", "Portfolio health" in res.contents[0].text)
+
+    # --- anchor-shift mechanism: the reason the demo is evergreen --------------
+    # Every load shifts fixture dates by (today - anchor). Overriding the anchor to
+    # 30 days ago must move every derived number by exactly +30 — proving relative
+    # time is preserved on any future clone (where shift = today - real anchor).
+    aged = StdioServerParameters(
+        command=sys.executable, args=["server.py"],
+        env={**os.environ, "FILEVINE_MCP_ALLOW_WRITES": "0", "FILEVINE_EXPORT_DIR": EXPORT_TMP,
+             "FILEVINE_FIXTURE_ANCHOR": (date.today() - timedelta(days=30)).isoformat()},
+    )
+    async with stdio_client(aged) as (read, write):
+        async with ClientSession(read, write) as s:
+            await s.initialize()
+            r = json.loads((await s.call_tool("get_deadlines", {})).content[0].text)
+            check("anchor shift moves Hale SOL by exactly the delta (81 -> 111)", any(
+                "Hale" in d["project"] and d["rule"] == "Statute of limitations"
+                and d["daysRemaining"] == 111 for d in r["deadlines"]))
+            r = json.loads((await s.call_tool("matter_health_report", {})).content[0].text)
+            check("anchor shift keeps the RFP task overdue by 33-30=3 days", any(
+                "RFP" in x["task"] and x["daysOverdue"] == 3 for x in r["overdueTasks"]))
+
+    # --- onboarding helper -----------------------------------------------------
+    out = subprocess.run([sys.executable, "setup_helper.py"], capture_output=True, text=True)
+    check("setup_helper prints ready-to-paste connection config",
+          out.returncode == 0 and "claude mcp add filevine" in out.stdout
+          and "mcpServers" in out.stdout)
 
     print(f"\nAll smoke checks passed ({'writes-enabled' if writes else 'read-only'} mode).")
 

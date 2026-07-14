@@ -14,15 +14,24 @@ Produces:
 Run:  .venv/bin/python demo_agent.py
 """
 
+import sys
+
+if sys.version_info < (3, 10):
+    sys.exit("demo_agent.py needs Python 3.10+ — run ./setup.sh, then "
+             ".venv/bin/python demo_agent.py")
+
 import asyncio
 import json
 import os
-import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+try:
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+except ImportError:
+    sys.exit("The 'mcp' package isn't installed here — run ./setup.sh, then "
+             ".venv/bin/python demo_agent.py")
 
 HERE = Path(__file__).parent
 DEMO_DIR = HERE / "demo"
@@ -107,9 +116,13 @@ async def session_writes() -> None:
                 "that has sat quiet past 21 days and stamps each with an explanatory note.",
                 "run_workflow", {"workflow_id": "stale-matter-sweep", "dry_run": False}, r)
 
+            # dates computed relative to today: fixtures anchor-shift keeps the
+            # portfolio evergreen, so the demo must not hardcode calendar dates
+            today = date.today()
             args = {"project_id": 10243,
                     "title": "Escalate: partner review of RFP Set 1 objections — meet-and-confer window passed",
-                    "assignee": "D. Okafor", "due_date": "2026-07-15", "priority": "critical"}
+                    "assignee": "D. Okafor", "due_date": (today + timedelta(days=2)).isoformat(),
+                    "priority": "critical"}
             r = await call("create_task", args)
             record(
                 "Act", "action",
@@ -118,11 +131,13 @@ async def session_writes() -> None:
                 "window already closed.",
                 "create_task", args, r)
 
+            served = (today - timedelta(days=47)).isoformat()
+            closed = (today - timedelta(days=12)).isoformat()
             args = {"project_id": 10243,
-                    "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses "
-                            "(served 2026-05-27) closed 2026-07-01. Escalation task filed to D. Okafor "
-                            "2026-07-13; recommend serving deficiency letter with the meet-and-confer "
-                            "request to preserve the objection record."}
+                    "text": f"[triage] Meet-and-confer window on Defendant's RFP Set 1 responses "
+                            f"(served {served}) closed {closed}. Escalation task filed to D. Okafor "
+                            f"{today.isoformat()}; recommend serving deficiency letter with the "
+                            f"meet-and-confer request to preserve the objection record."}
             r = await call("add_note", args)
             record(
                 "Act", "action",
