@@ -18,8 +18,8 @@ Design decisions (deliberate, and worth reading):
   * EVERY CALL IS AUDITED. Tool name, arguments, mode, and timestamp are appended to
     audit.jsonl. If an agent did something to a matter, you can answer "what, when, why."
   * MOCK MODE OUT OF THE BOX. Runs against bundled fixture data (six realistic
-    plaintiff-side matters) with zero credentials — doubling as the self-serve sandbox
-    Filevine doesn't ship. Set FILEVINE_CLIENT_ID / FILEVINE_CLIENT_SECRET / FILEVINE_PAT
+    plaintiff-side matters) with zero credentials — doubling as a self-serve sandbox.
+    Set FILEVINE_CLIENT_ID / FILEVINE_CLIENT_SECRET / FILEVINE_PAT
     to target a real org via the documented PAT token-exchange flow (see LiveBackend).
 
 Built by Charlie Krug (github.com/ctkrug), prototyped with Claude Code — which is the

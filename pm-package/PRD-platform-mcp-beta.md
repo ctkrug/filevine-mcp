@@ -23,11 +23,10 @@ sanctioned front door.
   platform. But firms and partners are also building agents *outside* it — in Claude,
   ChatGPT, custom pipelines — and those agents reach Filevine through whatever wrapper
   someone glued together.
-- **The community has already voted.** At least three unofficial Filevine MCP servers exist
-  (Advocate Cloud Solutions, Oktopeak, Rosen Advertising) plus Zapier's generic MCP surface.
-  Demand is proven. Every one of them holds org credentials outside Filevine's control, with
-  no Filevine-governed permission model, no audit trail a managing partner can pull, and no
-  versioning contract.
+- **The community is already building here.** Several unofficial Filevine MCP servers and
+  generic MCP bridges exist today. Demand is proven — and by their nature they hold org
+  credentials outside Filevine's control, with no Filevine-governed permission model, no
+  audit trail a managing partner can pull, and no versioning contract.
 - **The buyer's first question is governance.** Law firms ask "what can the agent touch, and
   what did it do?" before they ask anything else. An unofficial wrapper can't answer;
   the platform can.
@@ -77,7 +76,7 @@ Filevine controls — and makes every MCP-speaking assistant a distribution chan
   loop over REST, which this spec's `describe_snapshot` design assumes.
 - DataBridge ships analytics egress as near-real-time Snowflake shares — the precedent for
   "a governed, schema-stable contract instead of a DIY export."
-- No public first-party MCP artifact as of 2026-07-13.
+- No public first-party MCP artifact that I could find as of 2026-07-13.
 
 ## 5. Design sketch (reference implementation attached)
 

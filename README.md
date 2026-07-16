@@ -20,8 +20,8 @@ Code — which is exactly the workflow this server exists to serve.
 **Read-only by default.** Write tools (`create_task`, `add_note`, `run_workflow` with
 `dry_run=false`) refuse to run unless the operator sets `FILEVINE_MCP_ALLOW_WRITES=1`. An
 agent touching legal matter data should require an explicit human decision to get write
-access — the same principle I use for my autonomous trading agents (hard-coded risk
-controls, human-only arming).
+access — the same principle I hold my own autonomous agents to (hard-coded guardrails,
+human-only arming).
 
 **Preview before act.** `run_workflow` defaults to dry-run: exactly which matters matched
 and every task/note it would create, before anything happens. Idempotency guards mean
@@ -37,8 +37,8 @@ meet-and-confer clocks) surface what needs attention before anyone asks: the LOI
 reactive → proactive, expressed as MCP tools.
 
 **Mock mode out of the box.** Six realistic fictional plaintiff-side matters, zero
-credentials — which doubles as the self-serve sandbox Filevine's platform doesn't ship
-today. Real credentials flip it to live mode via the *documented* auth flow (see below).
+credentials — which doubles as a self-serve sandbox: the whole surface is evaluable
+without an org. Real credentials flip it to live mode via the *documented* auth flow (see below).
 
 **Evergreen fixtures.** Every date in the fixtures (fields *and* dates inside note text)
 shifts by `today − anchor` at load: Whitfield is always 46 days stale, Hale's SOL is
