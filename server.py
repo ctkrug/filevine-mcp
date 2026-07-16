@@ -478,9 +478,10 @@ def _known_assignees() -> set[str]:
 
 
 WRITE_DISABLED_MSG = (
-    "Write tools are disabled (read-only mode). The operator must set "
-    "FILEVINE_MCP_ALLOW_WRITES=1 to enable task/note creation. This is deliberate: "
-    "agents should not modify legal matter data without an explicit human decision."
+    "Write tools are disabled (read-only mode). The operator must grant writes — "
+    "re-run ./connect.sh --writes, or set FILEVINE_MCP_ALLOW_WRITES=1 in the server's "
+    "env — to enable task/note creation. This is deliberate: agents should not modify "
+    "legal matter data without an explicit human decision."
 )
 
 

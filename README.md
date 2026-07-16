@@ -13,7 +13,8 @@ touches all three:
 | **DataBridge** | `export_snapshot`: schema-versioned extracts with a manifest (CSV in miniature; production would hand off to real DataBridge/Snowflake) |
 
 Built by [Charlie Krug](https://www.linkedin.com/in/charliekrug) · prototyped with Claude
-Code — which is exactly the workflow this server exists to serve.
+Code — which is exactly the workflow this server exists to serve. Watch the recorded demo
+and read the full PM package at **[charliekrug.com/filevine](https://charliekrug.com/filevine)**.
 
 ## Why these design choices (the PM part)
 
@@ -60,8 +61,10 @@ claude          # start Claude Code in this folder, then just ask about your mat
 
 First question to try: *"What needs attention across our matters this morning?"* Then
 *"Run the SOL watchdog workflow"* — and when you tell it to execute for real, watch it
-**refuse**: writes stay off until you opt in (see below). Everything runs on bundled
-fictional data; no credentials, and nothing installs outside this folder.
+**refuse**: the refusal is the product. Granting writes is one command — `./connect.sh
+--writes` — deliberately a human step, never something the agent can talk its way into.
+Everything runs on bundled fictional data; no credentials, and nothing installs outside
+this folder.
 
 First time using `git`? macOS will pop a dialog offering to install its developer
 tools — click Install, let it finish, and run the command again.
@@ -173,9 +176,9 @@ window → snapshot export → audit trail recap. Every tool result in it is rea
   points at the wrong Python. Re-run `./connect.sh` from the repo folder (it re-registers
   with the right absolute paths), or run `.venv/bin/python setup_helper.py` and paste its
   output verbatim; for Claude Desktop, fully quit and reopen the app after editing the config.
-- **Agent says it can't create tasks** → that's the read-only default working. Set
-  `FILEVINE_MCP_ALLOW_WRITES=1` in the server's env block and reconnect — deliberately a
-  human step.
+- **Agent says it can't create tasks** → that's the read-only default working. Re-run
+  `./connect.sh --writes` (or set `FILEVINE_MCP_ALLOW_WRITES=1` in the server's env block
+  and reconnect) — deliberately a human step.
 - **"Unknown assignee"** → tasks must land on a real desk; the error lists the org's
   known people (mock org: D. Okafor, S. Brandt, paralegal.t, paralegal.m, intake.desk).
 - **Numbers don't match the recorded transcript exactly** → the recorded transcript is a
