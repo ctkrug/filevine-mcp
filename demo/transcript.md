@@ -1,5 +1,5 @@
 # filevine-mcp — recorded demo session
-Recorded 2026-07-14 14:54Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
+Recorded 2026-07-16 22:00Z against mock data (six fictional plaintiff-side matters). Every tool result below is the server's real output, captured over stdio by a scripted MCP client (`demo_agent.py`).
 
 ---
 
@@ -10,7 +10,7 @@ User asks: “What needs attention across our matters this morning?” One tool 
 
 ```json
 {
-  "generated": "2026-07-14",
+  "generated": "2026-07-16",
   "staleMatters": [
     {
       "project": "Hale v. Denver Transit Authority",
@@ -32,7 +32,7 @@ User asks: “What needs attention across our matters this morning?” One tool 
       "project": "Whitfield v. Carter Trucking Co.",
       "task": "Review defendant RFP responses Set 1",
       "assignee": "S. Brandt",
-      "dueDate": "2026-06-11",
+      "dueDate": "2026-06-13",
       "daysOverdue": 33,
       "priority": "high"
     },
@@ -40,7 +40,7 @@ User asks: “What needs attention across our matters this morning?” One tool 
       "project": "Whitfield v. Carter Trucking Co.",
       "task": "Schedule client deposition prep",
       "assignee": "D. Okafor",
-      "dueDate": "2026-06-21",
+      "dueDate": "2026-06-23",
       "daysOverdue": 23,
       "priority": "medium"
     },
@@ -48,7 +48,7 @@ User asks: “What needs attention across our matters this morning?” One tool 
       "project": "Estate of Romero v. Lakeside Medical",
       "task": "Conflict check and engagement letter",
       "assignee": "intake.desk",
-      "dueDate": "2026-07-03",
+      "dueDate": "2026-07-05",
       "daysOverdue": 11,
       "priority": "high"
     },
@@ -56,7 +56,7 @@ User asks: “What needs attention across our matters this morning?” One tool 
       "project": "Estate of Romero v. Lakeside Medical",
       "task": "Assign lead attorney",
       "assignee": "S. Brandt",
-      "dueDate": "2026-07-06",
+      "dueDate": "2026-07-08",
       "daysOverdue": 8,
       "priority": "high"
     }
@@ -76,12 +76,12 @@ User asks: “What needs attention across our matters this morning?” One tool 
   "solWithin180Days": [
     {
       "project": "Hale v. Denver Transit Authority",
-      "solDate": "2026-10-03",
+      "solDate": "2026-10-05",
       "daysRemaining": 81
     },
     {
       "project": "Okafor v. BrightPath Insurance",
-      "solDate": "2026-12-10",
+      "solDate": "2026-12-12",
       "daysRemaining": 149
     }
   ],
@@ -100,7 +100,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
 
 ```json
 {
-  "generated": "2026-07-14",
+  "generated": "2026-07-16",
   "disclaimer": "Illustrative, Colorado-flavored ruleset to demonstrate deadline chains \u2014 not legal advice. A production implementation would source per-jurisdiction rules and let firms configure their own.",
   "deadlines": [
     {
@@ -108,7 +108,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Whitfield v. Carter Trucking Co.",
       "rule": "Discovery meet-and-confer window",
       "basis": "35 days from service of responses (Whitfield_DefResponses_RFP_Set1.pdf)",
-      "date": "2026-07-02",
+      "date": "2026-07-04",
       "daysRemaining": -12,
       "severity": "overdue"
     },
@@ -117,7 +117,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Okafor v. BrightPath Insurance",
       "rule": "Settlement disbursement clock",
       "basis": "21-day funding/disbursement window from agreement draft (Okafor_SettlementAgreement_DRAFT.docx)",
-      "date": "2026-08-02",
+      "date": "2026-08-04",
       "daysRemaining": 19,
       "severity": "critical"
     },
@@ -126,7 +126,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Alvarez v. Summit Logistics",
       "rule": "Demand response follow-up",
       "basis": "30-day insurer response window from latest demand doc (Alvarez_DemandLetter_DRAFT_v3.docx)",
-      "date": "2026-08-08",
+      "date": "2026-08-10",
       "daysRemaining": 25,
       "severity": "critical"
     },
@@ -135,7 +135,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Hale v. Denver Transit Authority",
       "rule": "Governmental notice of claim",
       "basis": "CGIA-style 182-day notice from incident date",
-      "date": "2026-10-02",
+      "date": "2026-10-04",
       "daysRemaining": 80,
       "severity": "high"
     },
@@ -144,7 +144,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Hale v. Denver Transit Authority",
       "rule": "Statute of limitations",
       "basis": "Matter SOL date on file",
-      "date": "2026-10-03",
+      "date": "2026-10-05",
       "daysRemaining": 81,
       "severity": "high"
     },
@@ -153,7 +153,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Okafor v. BrightPath Insurance",
       "rule": "Statute of limitations",
       "basis": "Matter SOL date on file",
-      "date": "2026-12-10",
+      "date": "2026-12-12",
       "daysRemaining": 149,
       "severity": "medium"
     },
@@ -162,7 +162,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Whitfield v. Carter Trucking Co.",
       "rule": "Statute of limitations",
       "basis": "Matter SOL date on file",
-      "date": "2027-06-23",
+      "date": "2027-06-25",
       "daysRemaining": 344,
       "severity": "low"
     },
@@ -171,7 +171,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "project": "Alvarez v. Summit Logistics",
       "rule": "Statute of limitations",
       "basis": "Matter SOL date on file",
-      "date": "2027-11-04",
+      "date": "2027-11-06",
       "daysRemaining": 478,
       "severity": "low"
     },
@@ -201,31 +201,31 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
       "type": "create_task",
       "projectId": 10245,
       "project": "Okafor v. BrightPath Insurance",
-      "title": "SOL/notice filing-readiness check: Okafor v. BrightPath Insurance (deadline 2026-12-10)",
+      "title": "SOL/notice filing-readiness check: Okafor v. BrightPath Insurance (deadline 2026-12-12)",
       "assignee": "S. Brandt",
-      "dueDate": "2026-07-21",
+      "dueDate": "2026-07-23",
       "priority": "critical"
     },
     {
       "type": "add_note",
       "projectId": 10245,
       "project": "Okafor v. BrightPath Insurance",
-      "text": "[sol-watchdog] SOL/notice date 2026-12-10 is 149 days out. Filing-readiness task created for S. Brandt."
+      "text": "[sol-watchdog] SOL/notice date 2026-12-12 is 149 days out. Filing-readiness task created for S. Brandt."
     },
     {
       "type": "create_task",
       "projectId": 10246,
       "project": "Hale v. Denver Transit Authority",
-      "title": "SOL/notice filing-readiness check: Hale v. Denver Transit Authority (deadline 2026-10-03)",
+      "title": "SOL/notice filing-readiness check: Hale v. Denver Transit Authority (deadline 2026-10-05)",
       "assignee": "D. Okafor",
-      "dueDate": "2026-07-21",
+      "dueDate": "2026-07-23",
       "priority": "critical"
     },
     {
       "type": "add_note",
       "projectId": 10246,
       "project": "Hale v. Denver Transit Authority",
-      "text": "[sol-watchdog] SOL/notice date 2026-10-03 is 81 days out. Filing-readiness task created for D. Okafor."
+      "text": "[sol-watchdog] SOL/notice date 2026-10-05 is 81 days out. Filing-readiness task created for D. Okafor."
     }
   ],
   "skipped": []
@@ -241,7 +241,7 @@ Follow-up: “What deadlines am I actually up against?” The deadline-chain eng
 
 ```json
 {
-  "error": "Write tools are disabled (read-only mode). The operator must set FILEVINE_MCP_ALLOW_WRITES=1 to enable task/note creation. This is deliberate: agents should not modify legal matter data without an explicit human decision.",
+  "error": "Write tools are disabled (read-only mode). The operator must grant writes \u2014 re-run ./connect.sh --writes, or set FILEVINE_MCP_ALLOW_WRITES=1 in the server's env \u2014 to enable task/note creation. This is deliberate: agents should not modify legal matter data without an explicit human decision.",
   "hint": "Re-run with dry_run=true to preview."
 }
 ```
@@ -272,7 +272,7 @@ Same command, writes enabled: the sweep files reactivation tasks on every matter
       "projectId": 10243,
       "title": "Reactivate: Whitfield v. Carter Trucking Co. \u2014 46 days without activity",
       "assignee": "D. Okafor",
-      "dueDate": "2026-07-17",
+      "dueDate": "2026-07-19",
       "status": "open",
       "priority": "high"
     },
@@ -280,15 +280,15 @@ Same command, writes enabled: the sweep files reactivation tasks on every matter
       "noteId": 7101,
       "projectId": 10243,
       "authorId": "mcp-agent",
-      "date": "2026-07-14",
-      "text": "[stale-matter-sweep] No matter activity in 46 days (last touch 2026-05-29). Reactivation task filed to D. Okafor."
+      "date": "2026-07-16",
+      "text": "[stale-matter-sweep] No matter activity in 46 days (last touch 2026-05-31). Reactivation task filed to D. Okafor."
     },
     {
       "taskId": 9102,
       "projectId": 10246,
       "title": "Reactivate: Hale v. Denver Transit Authority \u2014 74 days without activity",
       "assignee": "D. Okafor",
-      "dueDate": "2026-07-17",
+      "dueDate": "2026-07-19",
       "status": "open",
       "priority": "high"
     },
@@ -296,8 +296,8 @@ Same command, writes enabled: the sweep files reactivation tasks on every matter
       "noteId": 7102,
       "projectId": 10246,
       "authorId": "mcp-agent",
-      "date": "2026-07-14",
-      "text": "[stale-matter-sweep] No matter activity in 74 days (last touch 2026-05-01). Reactivation task filed to D. Okafor."
+      "date": "2026-07-16",
+      "text": "[stale-matter-sweep] No matter activity in 74 days (last touch 2026-05-03). Reactivation task filed to D. Okafor."
     }
   ],
   "skipped": []
@@ -309,7 +309,7 @@ Same command, writes enabled: the sweep files reactivation tasks on every matter
 ## Step 7 — Act · `action`
 Acting on the deadline finding: a well-scoped, critical task on Whitfield — the 156-page RFP response has been unreviewed for 47 days and the meet-and-confer window already closed.
 **Tool:** `create_task`  
-**Args:** `{"project_id": 10243, "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed", "assignee": "D. Okafor", "due_date": "2026-07-16", "priority": "critical"}`
+**Args:** `{"project_id": 10243, "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed", "assignee": "D. Okafor", "due_date": "2026-07-18", "priority": "critical"}`
 
 ```json
 {
@@ -318,7 +318,7 @@ Acting on the deadline finding: a well-scoped, critical task on Whitfield — th
     "projectId": 10243,
     "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed",
     "assignee": "D. Okafor",
-    "dueDate": "2026-07-16",
+    "dueDate": "2026-07-18",
     "status": "open",
     "priority": "critical"
   }
@@ -330,7 +330,7 @@ Acting on the deadline finding: a well-scoped, critical task on Whitfield — th
 ## Step 8 — Act · `action`
 The matter file gets the context, not just the task — the next person who opens Whitfield sees why the escalation exists.
 **Tool:** `add_note`  
-**Args:** `{"project_id": 10243, "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."}`
+**Args:** `{"project_id": 10243, "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-30) closed 2026-07-04. Escalation task filed to D. Okafor 2026-07-16; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."}`
 
 ```json
 {
@@ -338,8 +338,8 @@ The matter file gets the context, not just the task — the next person who open
     "noteId": 7103,
     "projectId": 10243,
     "authorId": "mcp-agent",
-    "date": "2026-07-14",
-    "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
+    "date": "2026-07-16",
+    "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-30) closed 2026-07-04. Escalation task filed to D. Okafor 2026-07-16; recommend serving deficiency letter with the meet-and-confer request to preserve the objection record."
   }
 }
 ```
@@ -353,10 +353,10 @@ Finally: “Snapshot the org for the BI pipeline.” Four CSVs plus a manifest w
 
 ```json
 {
-  "generated": "2026-07-14T14:54:09.560184+00:00",
+  "generated": "2026-07-16T22:00:38.008608+00:00",
   "mode": "mock",
   "schemaVersion": "1.0",
-  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260714T145409Z",
+  "path": "/Users/Krug/Desktop/Claude/pocs/filevine-mcp/exports/snapshot-20260716T220038Z",
   "tables": [
     {
       "table": "projects",
@@ -433,30 +433,30 @@ Every one of the 8 calls this session — including the refused one — is in au
   "auditEntries": 8,
   "lastThree": [
     {
-      "ts": "2026-07-14T14:54:09.553977+00:00",
+      "ts": "2026-07-16T22:00:37.980337+00:00",
       "tool": "create_task",
       "args": {
         "project_id": 10243,
         "title": "Escalate: partner review of RFP Set 1 objections \u2014 meet-and-confer window passed",
         "assignee": "D. Okafor",
-        "due_date": "2026-07-16",
+        "due_date": "2026-07-18",
         "priority": "critical"
       },
       "mode": "mock",
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-14T14:54:09.556805+00:00",
+      "ts": "2026-07-16T22:00:37.994786+00:00",
       "tool": "add_note",
       "args": {
         "project_id": 10243,
-        "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-28) closed 2026-07-02. Escalation task filed to D. Okafor 2026-07-14; recommend serving deficiency letter with the me"
+        "text": "[triage] Meet-and-confer window on Defendant's RFP Set 1 responses (served 2026-05-30) closed 2026-07-04. Escalation task filed to D. Okafor 2026-07-16; recommend serving deficiency letter with the me"
       },
       "mode": "mock",
       "writes_enabled": true
     },
     {
-      "ts": "2026-07-14T14:54:09.559671+00:00",
+      "ts": "2026-07-16T22:00:38.007016+00:00",
       "tool": "export_snapshot",
       "args": {},
       "mode": "mock",

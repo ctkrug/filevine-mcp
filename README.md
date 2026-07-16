@@ -19,10 +19,14 @@ and read the full PM package at **[charliekrug.com/filevine](https://charliekrug
 ## Why these design choices (the PM part)
 
 **Read-only by default.** Write tools (`create_task`, `add_note`, `run_workflow` with
-`dry_run=false`) refuse to run unless the operator sets `FILEVINE_MCP_ALLOW_WRITES=1`. An
-agent touching legal matter data should require an explicit human decision to get write
-access — the same principle I hold my own autonomous agents to (hard-coded guardrails,
-human-only arming).
+`dry_run=false`) refuse to run until a human grants writes (`./connect.sh --writes`, or
+`FILEVINE_MCP_ALLOW_WRITES=1`). The gate isn't there to stop the *user* — a human can
+always grant writes, in five seconds. It separates human authority from agent capability:
+the switch lives outside the conversation, so no prompt — and no prompt injection buried in
+matter data — can flip it, and every write in the audit trail traces back to a person and a
+timestamp. A wrong answer is recoverable; a wrong write is in the matter file. (In
+production this becomes per-scope credentials from the org admin, then an OAuth 2.1 consent
+screen at GA — see the PRD.)
 
 **Preview before act.** `run_workflow` defaults to dry-run: exactly which matters matched
 and every task/note it would create, before anything happens. Idempotency guards mean

@@ -59,6 +59,12 @@ Filevine controls — and makes every MCP-speaking assistant a distribution chan
    write scope *and* an explicit non-dry-run call.
 5. Tool schemas are versioned and covered by a changelog from day one of beta.
 
+**The principle behind default-off:** the write gate separates *human authority* from *agent
+capability*. Nothing stops an org admin from granting write scopes — the point is that the
+grant happens out-of-band from the conversation, so neither model over-eagerness nor a prompt
+injection buried in matter data can manufacture it, and every write traces back to a recorded
+human decision. A wrong read is a wrong answer; a wrong write is in the matter file.
+
 **Non-goals for v1** (each one is a deliberate cut, not an oversight)
 
 - Document *content* upload/download (privilege review implications; needs its own design)
