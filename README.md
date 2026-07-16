@@ -65,7 +65,7 @@ claude          # start Claude Code in this folder, then just ask about your mat
 
 First question to try: *"What needs attention across our matters this morning?"* Then
 *"Run the SOL watchdog workflow"* — and when you tell it to execute for real, watch it
-**refuse**: the refusal is the product. Granting writes is one command — `./connect.sh
+**refuse**: the read-only default at work. Granting writes is one command — `./connect.sh
 --writes` — deliberately a human step, never something the agent can talk its way into.
 Everything runs on bundled fictional data; no credentials, and nothing installs outside
 this folder.
@@ -155,9 +155,9 @@ Resource: `filevine://health/summary` — one-paragraph standup summary.
 
 `demo/transcript.md` is a full 10-step session captured over stdio by `demo_agent.py`
 (a scripted MCP client — deterministic on purpose): morning triage → deadline chains →
-workflow dry-run → **refused write in read-only mode** (the refusal is the product) →
-human enables writes → workflow executes → escalation task on the blown meet-and-confer
-window → snapshot export → audit trail recap. Every tool result in it is real server output.
+workflow dry-run → **refused write in read-only mode** → human enables writes → workflow
+executes → escalation task on the blown meet-and-confer window → snapshot export → audit
+trail recap. Every tool result in it is real server output.
 
 ## The product package
 

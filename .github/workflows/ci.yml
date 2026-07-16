@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    # Runs the README's Windows quickstart verbatim on a real Windows VM.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show available Pythons
+        run: py -0p
+      - name: Create venv (README step 1)
+        run: py -3 -m venv .venv
+      - name: Install mcp (README step 2)
+        run: .venv\Scripts\pip install mcp
+      - name: Smoke suite, read-only (README step 3)
+        run: .venv\Scripts\python test_smoke.py
+      - name: Smoke suite, writes enabled
+        run: .venv\Scripts\python test_smoke.py
+        env:
+          FILEVINE_MCP_ALLOW_WRITES: "1"
+      - name: Connection config prints (README step 4)
+        run: .venv\Scripts\python setup_helper.py
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup.sh builds and self-tests from zero
+        run: ./setup.sh
