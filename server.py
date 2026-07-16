@@ -1,5 +1,5 @@
 """
-filevine-mcp — an MCP server for Filevine's API.
+filevine-mcp — a Platform MCP beta candidate, built from the outside.
 
 Lets any MCP client (Claude Code, Claude Desktop, or an agent pipeline) search matters,
 read documents/tasks/notes, file well-scoped tasks, and pull a cross-matter health report

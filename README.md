@@ -148,9 +148,9 @@ Resource: `filevine://health/summary` — one-paragraph standup summary.
 
 `demo/transcript.md` is a full 10-step session captured over stdio by `demo_agent.py`
 (a scripted MCP client — deterministic on purpose): morning triage → deadline chains →
-workflow dry-run → **refused write in read-only mode** → human enables writes → workflow
-executes → escalation task on the blown meet-and-confer window → snapshot export → audit
-trail recap. Every tool result in it is real server output.
+workflow dry-run → **refused write in read-only mode** (the refusal is the product) →
+human enables writes → workflow executes → escalation task on the blown meet-and-confer
+window → snapshot export → audit trail recap. Every tool result in it is real server output.
 
 ## The product package
 
