@@ -1,5 +1,7 @@
 # filevine-mcp — a Platform MCP beta candidate, built from the outside
 
+[![ci](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml)
+
 A working MCP (Model Context Protocol) server for [Filevine](https://www.filevine.com),
 plus the product package to ship it: PRD, beta program plan, working backlog, and release
 notes. Built as an application work sample for the **PM II, API Platform** role — the
@@ -98,7 +100,8 @@ needs 3.10+ — the #1 way a cold clone fails. `setup_helper.py` prints the exac
 MCP Inspector one-liner with absolute paths already filled in (backlog issue A2,
 practiced on itself).
 
-**Windows** (untested by the author — no Windows machine; these are the standard equivalents):
+**Windows** — these exact commands run green in [CI](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml)
+on a fresh `windows-latest` VM (Python 3.14), in both permission modes:
 
 ```powershell
 py -3 -m venv .venv
