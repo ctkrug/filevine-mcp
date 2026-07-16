@@ -65,6 +65,7 @@ EXPORT_DIR = Path(os.environ.get("FILEVINE_EXPORT_DIR", HERE / "exports"))
 
 mcp = FastMCP(
     "filevine",
+    log_level="WARNING",  # keep stderr clean for humans: no per-request INFO chatter
     instructions=(
         "Filevine legal matter data. Read tools are always available; write tools "
         "(create_task, add_note, run_workflow with dry_run=false) work only when the "

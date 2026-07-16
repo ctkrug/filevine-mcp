@@ -26,5 +26,6 @@ echo "Using $PY ($("$PY" --version))"
 echo
 .venv/bin/python test_smoke.py
 echo
-echo "Ready. Next step — print the exact connection config for your MCP client:"
-echo "  .venv/bin/python setup_helper.py"
+echo "Ready. Next step — hook it into Claude Code (one command):"
+echo "  ./connect.sh"
+echo "Using Claude Desktop / Cursor / another client instead?  .venv/bin/python setup_helper.py"

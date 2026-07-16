@@ -48,11 +48,30 @@ proves the mechanism (see the anchor-shift checks).
 
 ## Quickstart (macOS / Linux)
 
+Four commands, no terminal experience needed. Open **Terminal** (⌘-space, type
+"Terminal", return) and paste one line at a time:
+
 ```bash
-./setup.sh                          # finds Python 3.10+, builds .venv, runs all 31 smoke checks
-.venv/bin/python setup_helper.py    # prints ready-to-paste config for YOUR checkout
+git clone https://github.com/ctkrug/filevine-mcp && cd filevine-mcp
+./setup.sh      # builds a private .venv, then proves it: all 31 smoke checks run before your eyes
+./connect.sh    # registers the server with Claude Code (writes off) — or prints config for other clients
+claude          # start Claude Code in this folder, then just ask about your matters
+```
+
+First question to try: *"What needs attention across our matters this morning?"* Then
+*"Run the SOL watchdog workflow"* — and when you tell it to execute for real, watch it
+**refuse**: writes stay off until you opt in (see below). Everything runs on bundled
+fictional data; no credentials, and nothing installs outside this folder.
+
+First time using `git`? macOS will pop a dialog offering to install its developer
+tools — click Install, let it finish, and run the command again.
+
+The deeper pass, for reviewers who want the full confidence story:
+
+```bash
+.venv/bin/python setup_helper.py    # ready-to-paste config for Claude Desktop, Cursor, any MCP client
 .venv/bin/python demo_agent.py      # re-records demo/transcript.{json,md} live
-./verify.sh                         # full confidence check: cold clone + smoke + evergreen
+./verify.sh                         # full confidence check: cold clone + smoke + evergreen + live-failure
 ```
 
 `verify.sh` is the "safe to show someone" gate. It runs four checks and only exits
@@ -151,8 +170,9 @@ trail recap. Every tool result in it is real server output.
   system Python. Run `./setup.sh` once, then always use `.venv/bin/python`. Both entry
   points now exit with exactly this instruction instead of a stack trace.
 - **Claude shows "failed to connect" for the server** → the configured command probably
-  points at the wrong Python. Run `.venv/bin/python setup_helper.py` and paste its output
-  verbatim; for Claude Desktop, fully quit and reopen the app after editing the config.
+  points at the wrong Python. Re-run `./connect.sh` from the repo folder (it re-registers
+  with the right absolute paths), or run `.venv/bin/python setup_helper.py` and paste its
+  output verbatim; for Claude Desktop, fully quit and reopen the app after editing the config.
 - **Agent says it can't create tasks** → that's the read-only default working. Set
   `FILEVINE_MCP_ALLOW_WRITES=1` in the server's env block and reconnect — deliberately a
   human step.
