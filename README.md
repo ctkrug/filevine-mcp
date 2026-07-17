@@ -1,12 +1,12 @@
-# filevine-mcp — a Platform MCP beta candidate, built from the outside
+# filevine-mcp — a Platform MCP prototype, built from the outside
 
 [![ci](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml)
 
 A working MCP (Model Context Protocol) server for [Filevine](https://www.filevine.com),
-plus the product package to ship it: PRD, beta program plan, working backlog, and release
-notes. Built as an application work sample for the **PM II, API Platform** role — the
-posting lists *LOIS Workflows, DataBridge, and Platform MCP* as the portfolio, so this kit
-touches all three:
+built as a personal work sample for the **PM II, API Platform** role. It's an independent
+prototype — one illustration of what a first-party server could feel like, not a proposal
+for what Filevine should build. The posting lists *LOIS Workflows, DataBridge, and Platform
+MCP* as the portfolio, so this kit touches all three:
 
 | Portfolio product | This kit's analog |
 |---|---|
@@ -15,10 +15,10 @@ touches all three:
 | **DataBridge** | `export_snapshot`: schema-versioned extracts with a manifest (CSV in miniature; production would hand off to real DataBridge/Snowflake) |
 
 Built by [Charlie Krug](https://www.linkedin.com/in/charliekrug) · prototyped with Claude
-Code — which is exactly the workflow this server exists to serve. Watch the recorded demo
-and read the full PM package at **[charliekrug.com/filevine](https://charliekrug.com/filevine)**.
+Code — which is exactly the workflow this server exists to serve. Watch the recorded demo at
+**[charliekrug.com/filevine](https://charliekrug.com/filevine)**.
 
-## Why these design choices (the PM part)
+## Why these design choices
 
 **Read-only by default.** Write tools (`create_task`, `add_note`, `run_workflow` with
 `dry_run=false`) refuse to run until a human grants writes (`./connect.sh --writes`, or
@@ -27,8 +27,8 @@ always grant writes, in five seconds. It separates human authority from agent ca
 the switch lives outside the conversation, so no prompt — and no prompt injection buried in
 matter data — can flip it, and every write in the audit trail traces back to a person and a
 timestamp. A wrong answer is recoverable; a wrong write is in the matter file. (In
-production this becomes per-scope credentials from the org admin, then an OAuth 2.1 consent
-screen at GA — see the PRD.)
+production this would become per-scope credentials from the org admin, then an OAuth 2.1
+consent screen.)
 
 **Preview before act.** `run_workflow` defaults to dry-run: exactly which matters matched
 and every task/note it would create, before anything happens. Idempotency guards mean
@@ -97,8 +97,7 @@ hoping today's date happens to line up.
 `setup.sh` exists because macOS ships Python 3.9 as `python3` and the `mcp` package
 needs 3.10+ — the #1 way a cold clone fails. `setup_helper.py` prints the exact
 `claude mcp add` command, Claude Desktop JSON, generic MCP-client config, and an
-MCP Inspector one-liner with absolute paths already filled in (backlog issue A2,
-practiced on itself).
+MCP Inspector one-liner with absolute paths already filled in.
 
 **Windows** — these exact commands run green in [CI](https://github.com/ctkrug/filevine-mcp/actions/workflows/ci.yml)
 on a fresh `windows-latest` VM (Python 3.14), in both permission modes:
@@ -161,18 +160,6 @@ Resource: `filevine://health/summary` — one-paragraph standup summary.
 workflow dry-run → **refused write in read-only mode** → human enables writes → workflow
 executes → escalation task on the blown meet-and-confer window → snapshot export → audit
 trail recap. Every tool result in it is real server output.
-
-## The product package
-
-`pm-package/` is the PM half of the work sample:
-
-- **`PRD-platform-mcp-beta.md`** — problem, users (including the agent as a user), scope
-  and deliberate non-goals, permission/audit model, success metrics, LEX-timed rollout,
-  risks, and open questions for the Senior PM.
-- **`beta-program-plan.md`** — cohort design (including inviting the unofficial-MCP
-  maintainers), week-by-week arc, feedback→issue pipeline, exit AND kill criteria.
-- **`backlog.md`** — 16 issues across 5 epics, each with user story + acceptance criteria.
-- **`release-notes-draft.md`** — customer-facing announcement + internal enablement note.
 
 ## Troubleshooting (the live-on-a-call checklist)
 
